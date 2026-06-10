@@ -56,7 +56,8 @@ const applianceCatalog = [
     { id: 17, name: 'Air Conditioner', watts: 2000, type: 'generator', icon: AirVent },
     { id: 18, name: 'Electric Geyser', watts: 2500, type: 'generator', icon: Heater },
     { id: 19, name: 'UPS', watts: 800, type: 'generator', icon: SmartphoneCharging },
-    { id: 20, name: 'Custom Appliance', watts: 500, type: 'generator', icon: Plus },
+    { id: 20, name: 'Electric Stove', watts: 1800, type: 'generator', icon: Flame },
+    { id: 21, name: 'Custom Appliance', watts: 500, type: 'generator', icon: Plus },
 ]
 
 const selectedAppliance = ref('')
@@ -179,178 +180,160 @@ onMounted(() => {
         <link rel="stylesheet" href="https://rsms.me/inter/inter.css" />
     </Head>
     <div
-        class="flex min-h-screen flex-col items-center bg-[#FDFDFC] p-6 text-[#1b1b18] lg:justify-center lg:p-8 dark:bg-[#0a0a0a]"
+        class="flex min-h-screen flex-col items-center bg-[#FDFDFC] text-[#1b1b18] lg:justify-center p-2 lg:p-8 dark:bg-[#0a0a0a]"
     >
         
         <div
-            class="flex w-full items-center justify-center opacity-100 transition-opacity duration-750 lg:grow starting:opacity-0"
+            class="flex w-full items-center justify-center opacity-100 transition-opacity duration-1750 lg:grow starting:opacity-0"
         >
             <main class="w-full max-w-7xl overflow-hidden rounded-lg" >
-                <div class="w-full max-w-7xl mx-auto px-3 sm:px-6">
-                    <div class="p-6">
+                <div class="w-full max-w-7xl mx-auto px-0 sm:px-6">
+                    <div class="p-0">
 
-                        <div class="flex flex-col sm:flex-row items-center justify-between gap-4 mb-6">
+                        <div class="flex flex-col sm:flex-row items-center justify-between gap-4 mt-1">
                             <div class="flex items-center gap-3">
                                 <img
                                     src="/images/raadvolt-logo.png"
                                     alt="RaadVolt"
-                                    class="h-14 sm:h-16 w-auto"
+                                    class="h-26 sm:h-26 w-auto"
                                 />
                             </div>
 
-                            <h1 class="flex items-center gap-2 text-xl sm:text-2xl font-bold text-green-700">
+                            <!-- <h1 class="flex items-center gap-2 text-xl sm:text-2xl font-bold text-green-700">
                                 <Sun class="text-yellow-500" />
                                 Solar Calculator
-                            </h1>
+                            </h1> -->
                         </div>
 
                         <!-- Summary -->
                         <div
                             v-if="rows.length"
-                            class="mt-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2 mb-4"
+                            class="mt-6 grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-2 mb-4"
                         >
-                            <div class="p-4">
+                            <div class="p-0">
                                 <div class="flex items-center gap-3">
                                     <div class="bg-gray-100 text-green-700 p-2 rounded-xl">
-                                        <Zap size="22" />
+                                        <Zap size="32" />
                                     </div>
 
                                     <div>
                                         <h3 class="font-semibold text-gray-800">Light Load</h3>
-                                        <p class="text-xs text-gray-500">something..</p>
+                                        <p class="text-sm text-gray-500">{{ essentialLoad }} W</p>
                                     </div>
-                                </div>
-                                <div class="text-xl font-bold text-gray-500">
-                                    {{ essentialLoad }} W
                                 </div>
                             </div>
 
-                            <div class="p-4">
+                            <div class="p-0">
                                 <div class="flex items-center gap-3">
                                     <div class="bg-gray-100 text-green-700 p-2 rounded-xl">
-                                        <UtilityPole size="22" />
+                                        <UtilityPole size="32" />
                                     </div>
 
                                     <div>
                                         <h3 class="font-semibold text-gray-800">Heavy Load</h3>
-                                        <p class="text-xs text-gray-500">something..</p>
+                                        <p class="text-sm text-gray-500">{{ generatorLoad }} W</p>
                                     </div>
-                                </div>
-                                <div class="text-xl font-bold text-gray-500">
-                                    {{ generatorLoad }} W
                                 </div>
                             </div>
 
-                            <div class="p-4">
+                            <div class="p-0">
                                 <div class="flex items-center gap-3">
                                     <div class="bg-gray-100 text-green-700 p-2 rounded-xl">
-                                        <PlugZap size="22" />
+                                        <PlugZap size="32" />
                                     </div>
 
                                     <div>
-                                        <h3 class="font-semibold text-gray-800">Total Connected Load</h3>
-                                        <p class="text-xs text-gray-500">something..</p>
+                                        <h3 class="font-semibold text-gray-800">Total Load</h3>
+                                        <p class="text-sm text-gray-500">{{ totalLoad }} W</p>
                                     </div>
-                                </div>
-                                <div class="text-xl font-bold text-gray-500">
-                                    {{ totalLoad }} W
                                 </div>
                             </div>
 
-                            <div class="p-4">
+                            <div class="p-0">
                                 <div class="flex items-center gap-3">
                                     <div class="bg-gray-100 text-green-700 p-2 rounded-xl">
-                                        <Grid3x3 size="22" />
+                                        <Grid3x3 size="32" />
                                     </div>
 
                                     <div>
-                                        <h3 class="font-semibold text-gray-800">Required Solar (+30%)</h3>
-                                        <p class="text-xs text-gray-500">something..</p>
+                                        <h3 class="font-semibold text-gray-800">Required Solar</h3>
+                                        <p class="text-sm text-gray-500">{{ requiredSolarCapacity }} W</p>
                                     </div>
-                                </div>
-                                <div class="text-xl font-bold text-gray-500">
-                                    {{ requiredSolarCapacity }} W
                                 </div>
                             </div>
 
-                            <div class="p-4">
+                            <div class="p-0">
                                 <div class="flex items-center gap-3">
                                     <div class="bg-gray-100 text-green-700 p-2 rounded-xl">
-                                        <BatteryCharging size="22" />
+                                        <BatteryCharging size="32" />
                                     </div>
 
                                     <div>
-                                        <h3 class="font-semibold text-gray-800">Required Battery (+20%)</h3>
-                                        <input
-                                            type="number"
-                                            min="0"
-                                            max="16"
-                                            v-model.number="backup_hours"
-                                            class="border rounded px-2 py-2 w-full max-w-[100px] text-center"
-                                        />
+                                        <h3 class="font-semibold text-gray-800">Required Battery</h3>
+                                        <div class="flex gap-3">
+                                            <input
+                                                type="number"
+                                                min="0"
+                                                max="16"
+                                                v-model.number="backup_hours"
+                                                class="w-full max-w-[50px] border border-green-200"
+                                            />
+                                            <p class="text-sm text-gray-500">{{ requiredBatteryCapacity }} W</p>
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="text-xl font-bold text-gray-500">
-                                    {{ requiredBatteryCapacity }} W
                                 </div>
                             </div>
 
-                            <div class="p-4">
+                            <div class="p-0">
                                 <div class="flex items-center gap-3">
                                     <div class="bg-gray-100 text-green-700 p-2 rounded-xl">
-                                        <Grid3x3 size="22" />
+                                        <Grid3x3 size="32" />
                                     </div>
 
                                     <div>
                                         <h3 class="font-semibold text-gray-800">Solar Panels</h3>
-                                        <select
-                                            v-model.number="selectedPanelWatt"
-                                            class="border rounded px-2 py-2 w-full max-w-[100px] text-center"
-                                        >
-                                            <option :value="450">450W</option>
-                                            <option :value="550">550W</option>
-                                            <option :value="585">585W</option>
-                                            <option :value="635">635W</option>
-                                            <option :value="650">650W</option>
-                                            <option :value="670">670W</option>
-                                            <option :value="720">720W</option>
-                                        </select>
+                                        <div class="flex gap-3">
+                                            <select
+                                                v-model.number="selectedPanelWatt"
+                                                class="w-full max-w-[70px] border border-green-200 text-center"
+                                            >
+                                                <option :value="450">450W</option>
+                                                <option :value="550">550W</option>
+                                                <option :value="585">585W</option>
+                                                <option :value="635">635W</option>
+                                                <option :value="650">650W</option>
+                                                <option :value="670">670W</option>
+                                                <option :value="720">720W</option>
+                                            </select>
+                                            <p class="text-sm text-gray-500">{{ totalPanels }}</p>
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="text-xl font-bold text-gray-500">
-                                    {{ totalPanels }}
                                 </div>
                             </div>
 
-                            <div class="p-4">
+                            <div class="p-0">
                                 <div class="flex items-center gap-3">
                                     <div class="bg-gray-100 text-green-700 p-2 rounded-xl">
-                                        <Sheet size="22" />
+                                        <Sheet size="32" />
                                     </div>
 
                                     <div>
                                         <h3 class="font-semibold text-gray-800">Spare Capacity</h3>
-                                        <p class="text-xs text-gray-500">something..</p>
+                                        <p class="text-sm text-gray-500">{{ spareCapacity }} W</p>
                                     </div>
-                                </div>
-                                <div class="text-xl font-bold text-gray-500">
-                                    {{ spareCapacity }} W
                                 </div>
                             </div>
 
-                            <div class="p-4">
+                            <div class="p-0">
                                 <div class="flex items-center gap-3">
                                     <div class="bg-gray-100 text-green-700 p-2 rounded-xl">
-                                        <Zap size="22" />
+                                        <Zap size="32" />
                                     </div>
 
                                     <div>
-                                        <h3 class="font-semibold text-gray-800">Installed Capacity</h3>
-                                        <p class="text-xs text-gray-500">something..</p>
+                                        <h3 class="font-semibold text-gray-800">Total Capacity</h3>
+                                        <p class="text-sm text-gray-500">{{ installedCapacity }} W</p>
                                     </div>
-                                </div>
-                                <div class="text-xl font-bold text-gray-500">
-                                    {{ installedCapacity }} W
                                 </div>
                             </div>
                         </div>
@@ -399,17 +382,18 @@ onMounted(() => {
                                             addAppliance(item);
                                             showApplianceModal = false;
                                         "
-                                        class="bg-blue-500 hover:bg-blue-600 text-white p-3 rounded-lg flex flex-col items-center gap-2"
+                                        class="hover:bg-gray-200 p-3 rounded-lg flex flex-col items-center gap-2"
                                     >
-                                        <component :is="item.icon" :size="24" />
+                                        <div class="flex items-center gap-3">
+                                            <div class="bg-gray-100 text-green-700 p-2 rounded-xl">
+                                                <component :is="item.icon" :size="24" />
+                                            </div>
 
-                                        <span class="text-sm text-center">
-                                            {{ item.name }}
-                                        </span>
-
-                                        <span class="text-xs opacity-80">
-                                            {{ item.watts }}W
-                                        </span>
+                                            <div>
+                                                <p class="text-sm font-semibold text-gray-800">{{ item.name }}</p>
+                                                <p class="text-xs text-gray-500">{{ item.watts }}W</p>
+                                            </div>
+                                        </div>
                                     </button>
                                 </div>
                             </div>
@@ -420,7 +404,7 @@ onMounted(() => {
                             <div>
                                 <button
                                     @click="showApplianceModal = true"
-                                    class="fixed bottom-6 right-6 bg-gradient-to-r from-green-600 to-yellow-500 text-white rounded-full w-14 h-14 shadow-xl flex items-center justify-center z-50"
+                                    class="fixed bottom-6 right-6 bg-gradient-to-r from-green-500 to-yellow-200 text-white rounded-full w-14 h-14 shadow-xl flex items-center justify-center z-50 cursor-pointer"
                                 >
                                     <Plus />
                                 </button>
@@ -532,6 +516,22 @@ onMounted(() => {
                                                 : 'text-gray-400'"
                                         >
                                             Generator
+                                        </span>
+                                    </div>
+                                </div>
+
+                                <!-- Add Appliance Button -->
+                                <div
+                                    class="flex items-center justify-center bg-gradient-to-br from-green-100 to-yellow-50 border-2 border-dashed border-green-300 rounded-2xl p-6 shadow-sm hover:shadow-md transition cursor-pointer"
+                                    @click="showApplianceModal = true"
+                                >
+                                    <div class="flex flex-col items-center justify-center text-center space-y-2">
+                                        <div class="w-14 h-14 flex items-center justify-center rounded-full bg-gradient-to-r from-green-500 to-yellow-200 text-white shadow">
+                                            <Plus :size="28" />
+                                        </div>
+
+                                        <span class="text-green-700 font-semibold text-sm">
+                                            Add Appliance
                                         </span>
                                     </div>
                                 </div>
