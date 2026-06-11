@@ -5,33 +5,6 @@ import { register } from '@/routes';
 
 import { ref, computed, onMounted } from 'vue'
 import * as LucideIcons from 'lucide-vue-next'
-// import {
-//     Fan,
-//     Refrigerator,
-//     WashingMachine,
-//     Laptop,
-//     Monitor,
-//     Router,
-//     Camera,
-//     Wind,
-//     Flame,
-//     Cpu,
-//     Plus,
-//     Trash2,
-//     Sun,
-//     BatteryCharging,
-//     Zap,
-//     Lightbulb,
-//     Factory,
-//     AirVent,
-//     Heater,
-//     SmartphoneCharging,
-//     UtilityPole,
-//     X,
-//     Grid3x3,
-//     PlugZap,
-//     Sheet,
-// } from 'lucide-vue-next'
 
 const props = defineProps({
     months: Array,
@@ -196,7 +169,7 @@ onMounted(() => {
                             <div class="p-0">
                                 <div class="flex items-center gap-3">
                                     <div class="bg-gray-100 text-green-700 p-2 rounded-xl">
-                                        <component :is="LucideIcons.Zap" size="32" />
+                                        <component :is="LucideIcons.CircuitBoard" size="32" />
                                     </div>
 
                                     <div>
@@ -209,7 +182,7 @@ onMounted(() => {
                             <div class="p-0">
                                 <div class="flex items-center gap-3">
                                     <div class="bg-gray-100 text-green-700 p-2 rounded-xl">
-                                        <component :is="LucideIcons.UtilityPole" size="32" />
+                                        <component :is="LucideIcons.EvCharger" size="32" />
                                     </div>
 
                                     <div>
@@ -235,7 +208,7 @@ onMounted(() => {
                             <div class="p-0">
                                 <div class="flex items-center gap-3">
                                     <div class="bg-gray-100 text-green-700 p-2 rounded-xl">
-                                        <component :is="LucideIcons.Grid3x3" size="32"/>
+                                        <component :is="LucideIcons.SolarPanel" size="32"/>
                                     </div>
 
                                     <div>
@@ -270,7 +243,7 @@ onMounted(() => {
                             <div class="p-0">
                                 <div class="flex items-center gap-3">
                                     <div class="bg-gray-100 text-green-700 p-2 rounded-xl">
-                                        <component :is="LucideIcons.Grid3x3" size="32"/>
+                                        <component :is="LucideIcons.Grid3x2" size="32"/>
                                     </div>
 
                                     <div>
@@ -297,7 +270,7 @@ onMounted(() => {
                             <div class="p-0">
                                 <div class="flex items-center gap-3">
                                     <div class="bg-gray-100 text-green-700 p-2 rounded-xl">
-                                        <component :is="LucideIcons.Sheet" size="32"/>
+                                        <component :is="LucideIcons.Calculator" size="32"/>
                                     </div>
 
                                     <div>

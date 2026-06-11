@@ -11,7 +11,7 @@ class HomeController extends Controller
     public function index()
     {
         return Inertia::render('Welcome', [
-            'appliances' => Appliance::latest()->get()
+            'appliances' => Appliance::orderBy('id')->get()
         ]);
     }
 }

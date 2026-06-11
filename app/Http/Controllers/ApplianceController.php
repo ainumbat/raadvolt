@@ -12,7 +12,7 @@ class ApplianceController extends Controller
     public function index()
     {
         return Inertia::render('appliance/index', [
-            'appliances' => Appliance::latest()->get()
+            'appliances' => Appliance::orderBy('id')->get()
         ]);
     }
 
