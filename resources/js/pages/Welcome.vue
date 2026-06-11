@@ -4,62 +4,47 @@ import { dashboard, login } from '@/routes';
 import { register } from '@/routes';
 
 import { ref, computed, onMounted } from 'vue'
-import {
-    Fan,
-    Refrigerator,
-    WashingMachine,
-    Laptop,
-    Monitor,
-    Router,
-    Camera,
-    Wind,
-    Flame,
-    Cpu,
-    Plus,
-    Trash2,
-    Sun,
-    BatteryCharging,
-    Zap,
-    Lightbulb,
-    Factory,
-    AirVent,
-    Heater,
-    SmartphoneCharging,
-    UtilityPole,
-    X,
-    Grid3x3,
-    PlugZap,
-    Sheet,
-} from 'lucide-vue-next'
+import * as LucideIcons from 'lucide-vue-next'
+// import {
+//     Fan,
+//     Refrigerator,
+//     WashingMachine,
+//     Laptop,
+//     Monitor,
+//     Router,
+//     Camera,
+//     Wind,
+//     Flame,
+//     Cpu,
+//     Plus,
+//     Trash2,
+//     Sun,
+//     BatteryCharging,
+//     Zap,
+//     Lightbulb,
+//     Factory,
+//     AirVent,
+//     Heater,
+//     SmartphoneCharging,
+//     UtilityPole,
+//     X,
+//     Grid3x3,
+//     PlugZap,
+//     Sheet,
+// } from 'lucide-vue-next'
 
 const props = defineProps({
     months: Array,
+    appliances: Array
 })
-  
-const applianceCatalog = [
-    { id: 1, name: 'Ceiling Fan', watts: 40, type: 'essential', icon: Fan },
-    { id: 2, name: 'LED Light', watts: 12, type: 'essential', icon: Lightbulb },
-    { id: 3, name: 'Bracket Fan', watts: 60, type: 'essential', icon: Wind },
-    { id: 4, name: 'Stand Fan', watts: 80, type: 'generator', icon: Wind },
-    { id: 5, name: 'Air Cooler', watts: 200, type: 'generator', icon: Wind },
-    { id: 6, name: 'Fridge', watts: 200, type: 'essential', icon: Refrigerator },
-    { id: 7, name: 'Deep Freezer', watts: 300, type: 'generator', icon: Refrigerator },
-    { id: 8, name: 'Iron', watts: 1000, type: 'generator', icon: Flame },
-    { id: 9, name: 'Motor', watts: 800, type: 'generator', icon: Cpu },
-    { id: 10, name: 'Washing Machine', watts: 500, type: 'generator', icon: WashingMachine },
-    { id: 11, name: 'Microwave', watts: 1200, type: 'generator', icon: Flame },
-    { id: 12, name: 'Air Fryer', watts: 1800, type: 'generator', icon: Flame },
-    { id: 13, name: 'Desktop Computer', watts: 120, type: 'generator', icon: Monitor },
-    { id: 14, name: 'Laptop', watts: 65, type: 'generator', icon: Laptop },
-    { id: 15, name: 'Security Camera', watts: 25, type: 'essential', icon: Camera },
-    { id: 16, name: 'WiFi Router', watts: 10, type: 'essential', icon: Router },
-    { id: 17, name: 'Air Conditioner', watts: 2000, type: 'generator', icon: AirVent },
-    { id: 18, name: 'Electric Geyser', watts: 2500, type: 'generator', icon: Heater },
-    { id: 19, name: 'UPS', watts: 800, type: 'generator', icon: SmartphoneCharging },
-    { id: 20, name: 'Electric Stove', watts: 1800, type: 'generator', icon: Flame },
-    { id: 21, name: 'Tube Light', watts: 35, type: 'essential', icon: Lightbulb },
-    { id: 22, name: 'Custom Appliance', watts: 500, type: 'generator', icon: Plus },
-]
+
+const applianceMap = computed(() => {
+    const map = {}
+    props.appliances.forEach(a => {
+        map[a.id] = a
+    })
+    return map
+})
 
 const selectedAppliance = ref('')
 const rows = ref([])
@@ -76,9 +61,7 @@ const addAppliance = (appliance) => {
     })
 }
 
-const getAppliance = (id) => {
-    return applianceCatalog.find(a => a.id === id)
-}
+const getAppliance = (id) => applianceMap.value[id]
 
 const removeRow = (index) => {
     rows.value.splice(index, 1)
@@ -163,7 +146,7 @@ onMounted(() => {
         { id: 6, quantity: 1 }, // 1 Fridge
         { id: 8, quantity: 1 }, // 1 Iron
     ].forEach(item => {
-        const appliance = applianceCatalog.find(a => a.id === item.id)
+        const appliance = getAppliance(item.id)
 
         if (appliance) {
             addAppliance({
@@ -213,7 +196,7 @@ onMounted(() => {
                             <div class="p-0">
                                 <div class="flex items-center gap-3">
                                     <div class="bg-gray-100 text-green-700 p-2 rounded-xl">
-                                        <Zap size="32" />
+                                        <component :is="LucideIcons.Zap" size="32" />
                                     </div>
 
                                     <div>
@@ -226,7 +209,7 @@ onMounted(() => {
                             <div class="p-0">
                                 <div class="flex items-center gap-3">
                                     <div class="bg-gray-100 text-green-700 p-2 rounded-xl">
-                                        <UtilityPole size="32" />
+                                        <component :is="LucideIcons.UtilityPole" size="32" />
                                     </div>
 
                                     <div>
@@ -239,7 +222,7 @@ onMounted(() => {
                             <div class="p-0">
                                 <div class="flex items-center gap-3">
                                     <div class="bg-gray-100 text-green-700 p-2 rounded-xl">
-                                        <PlugZap size="32" />
+                                        <component :is="LucideIcons.PlugZap" size="32"/>
                                     </div>
 
                                     <div>
@@ -252,7 +235,7 @@ onMounted(() => {
                             <div class="p-0">
                                 <div class="flex items-center gap-3">
                                     <div class="bg-gray-100 text-green-700 p-2 rounded-xl">
-                                        <Grid3x3 size="32" />
+                                        <component :is="LucideIcons.Grid3x3" size="32"/>
                                     </div>
 
                                     <div>
@@ -265,7 +248,7 @@ onMounted(() => {
                             <div class="p-0">
                                 <div class="flex items-center gap-3">
                                     <div class="bg-gray-100 text-green-700 p-2 rounded-xl">
-                                        <BatteryCharging size="32" />
+                                        <component :is="LucideIcons.BatteryCharging" size="32"/>
                                     </div>
 
                                     <div>
@@ -287,7 +270,7 @@ onMounted(() => {
                             <div class="p-0">
                                 <div class="flex items-center gap-3">
                                     <div class="bg-gray-100 text-green-700 p-2 rounded-xl">
-                                        <Grid3x3 size="32" />
+                                        <component :is="LucideIcons.Grid3x3" size="32"/>
                                     </div>
 
                                     <div>
@@ -314,7 +297,7 @@ onMounted(() => {
                             <div class="p-0">
                                 <div class="flex items-center gap-3">
                                     <div class="bg-gray-100 text-green-700 p-2 rounded-xl">
-                                        <Sheet size="32" />
+                                        <component :is="LucideIcons.Sheet" size="32"/>
                                     </div>
 
                                     <div>
@@ -327,7 +310,7 @@ onMounted(() => {
                             <div class="p-0">
                                 <div class="flex items-center gap-3">
                                     <div class="bg-gray-100 text-green-700 p-2 rounded-xl">
-                                        <Zap size="32" />
+                                        <component :is="LucideIcons.Zap" size="32"/>
                                     </div>
 
                                     <div>
@@ -339,23 +322,7 @@ onMounted(() => {
                         </div>
                         
 
-                        <!-- Add Appliance -->
-                        <div class="flex flex-wrap gap-2 mb-6" style="display: none;">
-                            <button
-                                v-for="item in applianceCatalog"
-                                :key="item.id"
-                                @click="addAppliance(item)"
-                                class="bg-blue-500 hover:bg-blue-600 text-white px-3 py-2 rounded-lg flex items-center gap-2"
-                                :title="`${item.name} - ${item.watts}W`"
-                            >
-                                <component :is="item.icon" :size="18" />
-                                <span class="text-sm">
-                                    {{ item.name }} 
-                                    <!-- ({{ item.watts }}W) -->
-                                </span>
-                            </button>
-                        </div>
-
+                        <!-- Add Appliance Modal -->
                         <div
                             v-if="showApplianceModal"
                             class="fixed inset-0 bg-black/50 flex items-center justify-center z-50"
@@ -370,13 +337,13 @@ onMounted(() => {
                                         @click="showApplianceModal = false"
                                         class="text-gray-500 hover:text-gray-700"
                                     >
-                                        <X />
+                                        <component :is="LucideIcons.X" />
                                     </button>
                                 </div>
 
                                 <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
                                     <button
-                                        v-for="item in applianceCatalog"
+                                        v-for="item in appliances"
                                         :key="item.id"
                                         @click="
                                             addAppliance(item);
@@ -386,7 +353,7 @@ onMounted(() => {
                                     >
                                         <div class="flex items-center gap-3">
                                             <div class="bg-gray-100 text-green-700 p-2 rounded-xl">
-                                                <component :is="item.icon" :size="24" />
+                                                <component :is="LucideIcons[getAppliance(item.id)?.icon] || LucideIcons.Zap" size="24" />
                                             </div>
 
                                             <div>
@@ -406,7 +373,7 @@ onMounted(() => {
                                     @click="showApplianceModal = true"
                                     class="fixed bottom-6 right-6 bg-gradient-to-r from-green-500 to-yellow-200 text-white rounded-full w-14 h-14 shadow-xl flex items-center justify-center z-50 cursor-pointer"
                                 >
-                                    <Plus />
+                                    <component :is="LucideIcons.Plus" />
                                 </button>
                             </div>
                             
@@ -420,10 +387,7 @@ onMounted(() => {
                                     <div class="flex justify-between items-start mb-4">
                                         <div class="flex items-center gap-3">
                                             <div class="bg-green-100 text-green-700 p-2 rounded-xl">
-                                                <component
-                                                    :is="getAppliance(row.appliance_id)?.icon"
-                                                    :size="22"
-                                                />
+                                                <component :is="LucideIcons[getAppliance(row.appliance_id)?.icon] || LucideIcons.Plus" size="22" />
                                             </div>
 
                                             <div>
@@ -527,7 +491,7 @@ onMounted(() => {
                                 >
                                     <div class="flex flex-col items-center justify-center text-center space-y-2">
                                         <div class="w-14 h-14 flex items-center justify-center rounded-full bg-gradient-to-r from-green-500 to-yellow-200 text-white shadow">
-                                            <Plus :size="28" />
+                                            <component :is="LucideIcons.Plus" :size="28" />
                                         </div>
 
                                         <span class="text-green-700 font-semibold text-sm">
