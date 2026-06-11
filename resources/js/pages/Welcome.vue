@@ -57,7 +57,8 @@ const applianceCatalog = [
     { id: 18, name: 'Electric Geyser', watts: 2500, type: 'generator', icon: Heater },
     { id: 19, name: 'UPS', watts: 800, type: 'generator', icon: SmartphoneCharging },
     { id: 20, name: 'Electric Stove', watts: 1800, type: 'generator', icon: Flame },
-    { id: 21, name: 'Custom Appliance', watts: 500, type: 'generator', icon: Plus },
+    { id: 21, name: 'Tube Light', watts: 35, type: 'essential', icon: Lightbulb },
+    { id: 22, name: 'Custom Appliance', watts: 500, type: 'generator', icon: Plus },
 ]
 
 const selectedAppliance = ref('')
@@ -150,7 +151,7 @@ const installedCapacity = computed(() => {
 })
 
 const spareCapacity = computed(() => {
-    return installedCapacity.value - requiredSolarCapacity.value
+    return Math.ceil((installedCapacity.value - requiredSolarCapacity.value) * 0.7)
 })
 
 const showApplianceModal = ref(false)
@@ -182,7 +183,6 @@ onMounted(() => {
     <div
         class="flex min-h-screen flex-col items-center bg-[#FDFDFC] text-[#1b1b18] lg:justify-center p-2 lg:p-8 dark:bg-[#0a0a0a]"
     >
-        
         <div
             class="flex w-full items-center justify-center opacity-100 transition-opacity duration-1750 lg:grow starting:opacity-0"
         >
@@ -271,14 +271,14 @@ onMounted(() => {
                                     <div>
                                         <h3 class="font-semibold text-gray-800">Required Battery</h3>
                                         <div class="flex gap-3">
+                                            <p class="text-sm text-gray-500">{{ requiredBatteryCapacity }} W</p>
                                             <input
                                                 type="number"
                                                 min="0"
                                                 max="16"
                                                 v-model.number="backup_hours"
-                                                class="w-full max-w-[50px] border border-green-200"
+                                                class="w-full max-w-[60px] border border-green-200"
                                             />
-                                            <p class="text-sm text-gray-500">{{ requiredBatteryCapacity }} W</p>
                                         </div>
                                     </div>
                                 </div>
@@ -293,6 +293,7 @@ onMounted(() => {
                                     <div>
                                         <h3 class="font-semibold text-gray-800">Solar Panels</h3>
                                         <div class="flex gap-3">
+                                            <p class="text-sm text-gray-500">{{ totalPanels }}</p>
                                             <select
                                                 v-model.number="selectedPanelWatt"
                                                 class="w-full max-w-[70px] border border-green-200 text-center"
@@ -305,7 +306,6 @@ onMounted(() => {
                                                 <option :value="670">670W</option>
                                                 <option :value="720">720W</option>
                                             </select>
-                                            <p class="text-sm text-gray-500">{{ totalPanels }}</p>
                                         </div>
                                     </div>
                                 </div>
