@@ -3,9 +3,13 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ApplianceController;
+use App\Http\Controllers\SolarCalculationController;
 
 // Route::inertia('/', 'Welcome')->name('home');
 Route::get('/', [HomeController::class, 'index'])->name('home');
+
+// Solar Report
+Route::post('/solar-calculations', [SolarCalculationController::class, 'store']);
 
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::inertia('dashboard', 'Dashboard')->name('dashboard');
@@ -20,6 +24,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
         Route::delete('/{appliance}', [ApplianceController::class, 'destroy'])->name('destroy');
     });
+
+    // Solar Reports
+    Route::get('/solar/reports', [SolarCalculationController::class, 'index']);
 });
 
 require __DIR__.'/settings.php';

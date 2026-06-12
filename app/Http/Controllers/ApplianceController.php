@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Appliance;
 use Inertia\Inertia;
+use App\Models\Appliance;
 use App\Http\Requests\StoreApplianceRequest;
 use App\Http\Requests\UpdateApplianceRequest;
 

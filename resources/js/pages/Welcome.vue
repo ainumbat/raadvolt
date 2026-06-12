@@ -111,6 +111,42 @@ const spareCapacity = computed(() => {
 })
 
 const showApplianceModal = ref(false)
+const showReportModal = ref(false)
+
+import { useForm } from '@inertiajs/vue3'
+
+const form = useForm({
+    name: '',
+    email: '',
+    whatsapp: '',
+    total_load: '',
+    essential_load: '',
+    generator_load: '',
+    backup_hours: '',
+    rows: []
+})
+
+const submitLead = () => {
+    form.total_load = totalLoad.value,
+    form.essential_load = essentialLoad.value,
+    form.generator_load = generatorLoad.value,
+    form.backup_hours = backup_hours.value
+    
+    form.rows = rows.value.map(row => ({
+        appliance_id: row.appliance_id,
+        watts: row.watts,
+        quantity: row.quantity,
+        type: row.type
+    }))
+
+    form.post('/solar-calculations', {
+        preserveScroll: true,
+        onSuccess: () => {
+            showLeadModal.value = false
+            form.reset()
+        }
+    })
+}
 
 onMounted(() => {
     [
@@ -339,6 +375,55 @@ onMounted(() => {
                             </div>
                         </div>
 
+                        <!-- Generate Report Modal -->
+                        <div
+                            v-if="showReportModal"
+                            class="fixed inset-0 bg-black/50 flex items-center justify-center z-50"
+                        >
+                            <div class="bg-white rounded-lg shadow-lg w-[95%] sm:w-full max-w-3xl p-4 sm:p-6">
+                                <div class="flex justify-between items-center mb-4">
+                                    <h2 class="text-xl font-semibold">
+                                        Generate Report
+                                    </h2>
+
+                                    <button
+                                        @click="showReportModal = false"
+                                        class="text-gray-500 hover:text-gray-700"
+                                    >
+                                        <component :is="LucideIcons.X" />
+                                    </button>
+                                </div>
+
+                                <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
+                                    
+                                    <input
+                                        v-model="form.name"
+                                        placeholder="Name"
+                                        class="w-full mb-3"
+                                    />
+                                    
+                                    <input
+                                        v-model="form.email"
+                                        placeholder="Email"
+                                        class="w-full mb-3"
+                                    />
+
+                                    <input
+                                        v-model="form.whatsapp"
+                                        placeholder="WhatsApp"
+                                        class="w-full mb-3"
+                                    />
+
+                                    <button
+                                        @click="submitLead"
+                                        class="w-full bg-green-600 text-white py-2 rounded"
+                                    >
+                                        Generate Report
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
                         <!-- Appliances List -->
                         <div class="overflow-x-auto">
                             <div>
@@ -378,7 +463,7 @@ onMounted(() => {
                                             @click="removeRow(index)"
                                             class="text-red-500 hover:text-red-700"
                                         >
-                                            <Trash2 :size="18" />
+                                            <component :is="LucideIcons.Trash2 || LucideIcons.X" size="18" />
                                         </button>
                                     </div>
 
@@ -460,16 +545,27 @@ onMounted(() => {
                                 <!-- Add Appliance Button -->
                                 <div
                                     class="flex items-center justify-center bg-gradient-to-br from-green-100 to-yellow-50 border-2 border-dashed border-green-300 rounded-2xl p-6 shadow-sm hover:shadow-md transition cursor-pointer"
-                                    @click="showApplianceModal = true"
                                 >
                                     <div class="flex flex-col items-center justify-center text-center space-y-2">
-                                        <div class="w-14 h-14 flex items-center justify-center rounded-full bg-gradient-to-r from-green-500 to-yellow-200 text-white shadow">
+                                        <div 
+                                            class="w-14 h-14 flex items-center justify-center rounded-full bg-gradient-to-r from-green-500 to-yellow-200 text-white shadow"
+                                            @click="showApplianceModal = true"
+                                        >
                                             <component :is="LucideIcons.Plus" :size="28" />
                                         </div>
 
                                         <span class="text-green-700 font-semibold text-sm">
                                             Add Appliance
                                         </span>
+
+                                        <div>
+                                            <button
+                                                @click="showReportModal = true"
+                                                class="bg-green-400 text-white rounded-full w-14 h-14 shadow-xl flex items-center justify-center z-50 cursor-pointer"
+                                            >
+                                                <component :is="LucideIcons.Sheet" />
+                                            </button>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
