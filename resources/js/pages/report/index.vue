@@ -1,5 +1,6 @@
 <script setup>
 import { ref } from 'vue'
+import { Link } from '@inertiajs/vue3'
 
 const props = defineProps({
     reports: Object
@@ -73,10 +74,17 @@ const viewItems = (report) => {
                         <td class="p-3 text-center">
                             <button
                                 @click="viewItems(report)"
-                                class="bg-green-600 text-white px-3 py-1 rounded"
+                                class="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-700 cursor-pointer"
                             >
                                 View Appliances
                             </button>
+
+                            <Link
+                                :href="`/solar/${report.id}/premium_report`"
+                                class="inline-flex items-center px-3 py-1 rounded bg-green-600 text-white hover:bg-green-700 cursor-pointer"
+                            >
+                                View Report
+                            </Link>
                         </td>
                     </tr>
                 </tbody>

@@ -383,43 +383,54 @@ onMounted(() => {
                             <div class="bg-white rounded-lg shadow-lg w-[95%] sm:w-full max-w-3xl p-4 sm:p-6">
                                 <div class="flex justify-between items-center mb-4">
                                     <h2 class="text-xl font-semibold">
-                                        Generate Report
+                                        
                                     </h2>
 
                                     <button
                                         @click="showReportModal = false"
-                                        class="text-gray-500 hover:text-gray-700"
+                                        class="text-gray-500 hover:text-gray-700 cursor-pointer"
                                     >
                                         <component :is="LucideIcons.X" />
                                     </button>
                                 </div>
 
-                                <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
-                                    
-                                    <input
-                                        v-model="form.name"
-                                        placeholder="Name"
-                                        class="w-full mb-3"
-                                    />
-                                    
-                                    <input
-                                        v-model="form.email"
-                                        placeholder="Email"
-                                        class="w-full mb-3"
-                                    />
+                                <div class="grid grid-cols-1 gap-3">
+                                    <div>
+                                        <label class="text-xs text-gray-500 block mb-1">Full Name</label>
 
-                                    <input
-                                        v-model="form.whatsapp"
-                                        placeholder="WhatsApp"
-                                        class="w-full mb-3"
-                                    />
+                                        <input
+                                            v-model="form.name"
+                                            placeholder="Full Name"
+                                            class="w-full rounded-sm border border-green-600"
+                                        />
+                                    </div>
+                                    
+                                    <div>
+                                        <label class="text-xs text-gray-500 block mb-1">WhatsApp</label>
+                                        <input
+                                            v-model="form.whatsapp"
+                                            placeholder="WhatsApp"
+                                            class="w-full rounded-sm border border-green-600"
+                                        />
+                                    </div>
 
-                                    <button
-                                        @click="submitLead"
-                                        class="w-full bg-green-600 text-white py-2 rounded"
-                                    >
-                                        Generate Report
-                                    </button>
+                                    <div>
+                                        <label class="text-xs text-gray-500 block mb-1">Email (Optional)</label>
+                                        <input
+                                            v-model="form.email"
+                                            placeholder="Email"
+                                            class="w-full rounded-sm border border-green-600"
+                                        />
+                                    </div>
+
+                                    <div>
+                                        <button
+                                            @click="submitLead"
+                                            class="flex gap-3 justify-center w-full bg-green-600 text-white py-2 rounded cursor-pointer"
+                                        >
+                                            <component :is="LucideIcons.Sheet" /> Generate Report
+                                        </button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
