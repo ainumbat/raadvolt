@@ -11,6 +11,7 @@ class SolarCalculationItem extends Model
         'appliance_id',
         'watts',
         'quantity',
+        'daily_runtime',
         'type',
     ];
 

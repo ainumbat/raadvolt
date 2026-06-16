@@ -41,6 +41,9 @@ const deleteAppliance = (id) => {
                     Watts
                 </th>
                 <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">
+                    Daily Runtime
+                </th>
+                <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">
                     Load Type
                 </th>
                 <th class="px-4 py-3 text-right text-xs font-semibold text-gray-600 uppercase">
@@ -63,13 +66,11 @@ const deleteAppliance = (id) => {
                     />                    
                 </td>
 
-                <td class="px-4 py-3 font-medium">
-                    {{ a.name }}
-                </td>
+                <td class="px-4 py-3 font-medium">{{ a.name }}</td>
 
-                <td class="px-4 py-3">
-                    {{ a.watts }} W
-                </td>
+                <td class="px-4 py-3">{{ a.watts }} W</td>
+                
+                <td class="px-4 py-3">{{ a.daily_runtime }} Hours</td>
 
                 <td class="px-4 py-3">
                     <span

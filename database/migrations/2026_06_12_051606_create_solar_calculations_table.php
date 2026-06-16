@@ -21,8 +21,10 @@ return new class extends Migration
             $table->integer('total_load')->default(0);
             $table->integer('essential_load')->default(0);
             $table->integer('generator_load')->default(0);
-
+            $table->integer('wire_length')->default(15);
             $table->integer('backup_hours')->default(0);
+            
+            $table->jsonb('report_data')->nullable();
 
             $table->timestamps();
         });

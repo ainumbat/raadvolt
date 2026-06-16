@@ -25,8 +25,7 @@ const viewItems = (report) => {
                         <th class="p-3 text-left">Name</th>
                         <th class="p-3 text-left">WhatsApp</th>
                         <th class="p-3 text-left">Email</th>
-                        <th class="p-3 text-left">Essential Load</th>
-                        <th class="p-3 text-left">Generator Load</th>
+                        <th class="p-3 text-left">Wire Length (meters)</th>
                         <th class="p-3 text-left">Total Load</th>
                         <th class="p-3 text-center">Appliances</th>
                         <th class="p-3 text-center">Action</th>
@@ -56,15 +55,11 @@ const viewItems = (report) => {
                         </td>
 
                         <td class="p-3">
-                            {{ report.essential_load }}
+                            {{ report.wire_length/3 }} 
                         </td>
 
                         <td class="p-3">
-                            {{ report.generator_load }}
-                        </td>
-
-                        <td class="p-3">
-                            {{ report.total_load }}
+                            {{ report.total_load }} W
                         </td>
 
                         <td class="p-3 text-center">

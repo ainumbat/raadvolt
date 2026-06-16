@@ -24,6 +24,7 @@ return new class extends Migration
 
             $table->integer('watts');
             $table->integer('quantity');
+            $table->float('daily_runtime')->default(1.5);
             $table->string('type')->default('essential');
 
             $table->timestamps();

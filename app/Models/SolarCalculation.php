@@ -16,7 +16,9 @@ class SolarCalculation extends Model
         'generator_load',
         'required_solar',
         'required_battery',
+        'wire_length',
         'backup_hours',
+        'report_data',
     ];
 
     public function items()

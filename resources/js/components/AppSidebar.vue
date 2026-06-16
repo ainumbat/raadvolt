@@ -23,6 +23,21 @@ const mainNavItems: NavItem[] = [
         href: dashboard(),
         icon: LayoutGrid,
     },
+    {
+        title: 'Solar Calculator',
+        href: '/',
+        icon: LayoutGrid,
+    },
+    {
+        title: 'Reports',
+        href: '/solar/reports',
+        icon: LayoutGrid,
+    },
+    {
+        title: 'Appliances',
+        href: '/appliances',
+        icon: LayoutGrid,
+    },
 ];
 
 const footerNavItems: NavItem[] = [

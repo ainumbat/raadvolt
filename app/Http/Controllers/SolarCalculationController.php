@@ -45,6 +45,7 @@ class SolarCalculationController extends Controller
             'total_load' => 'required|integer',
             'essential_load' => 'required|integer',
             'generator_load' => 'required|integer',
+            'wire_length' => 'required|numeric|min:0|max:300',
             'backup_hours' => 'required|numeric|min:0|max:16',
             'rows' => 'required|array|min:1',
         ]);
@@ -123,6 +124,7 @@ class SolarCalculationController extends Controller
         $essentialAppliances = [];
         $generatorAppliances = [];
 
+        $nonInverterFan = false;
         $hasAc = false;
         $hasMotor = false;
         $hasIron = false;
@@ -141,6 +143,10 @@ class SolarCalculationController extends Controller
             }
 
             $name = strtolower($item->appliance->name);
+
+            if (str_contains($name, 'fan') && $item->watts >= 90) {
+                $nonInverterFan = true;
+            }
 
             if (str_contains($name, 'ac')) {
                 $hasAc = true;
@@ -280,9 +286,16 @@ class SolarCalculationController extends Controller
         $tips = [];
         $warnings = [];
 
+        $warnings[] = 'Do not clean your solar panels during sunshine you could get high voltage shock.';
+
+        if ($nonInverterFan) {
+            $tips[] =
+                'Use inverter Fans to reduce solar and grid requirements by up to 70%.';
+        }
+
         if ($hasAc) {
             $tips[] =
-                'Use inverter ACs to reduce solar and battery requirements by up to 40%.';
+                'Use inverter ACs to reduce solar and battery requirements by up to 60%.';
         }
 
         if ($hasFridge) {
@@ -367,7 +380,7 @@ class SolarCalculationController extends Controller
                     'Avoid panel shading at all costs.',
                     'Install SPD and proper earthing.',
                     'Use correctly sized DC and AC cables.',
-                    'Schedule heavy loads during daytime.',
+                    'Schedule generator/heavy loads during daytime.',
                 ]
             ),
 

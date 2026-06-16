@@ -2,17 +2,17 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ApplianceController;
 use App\Http\Controllers\SolarCalculationController;
 
-// Route::inertia('/', 'Welcome')->name('home');
 Route::get('/', [HomeController::class, 'index'])->name('home');
 
 // Solar Report
 Route::post('/solar-calculations', [SolarCalculationController::class, 'store']);
 
 Route::middleware(['auth', 'verified'])->group(function () {
-    Route::inertia('dashboard', 'Dashboard')->name('dashboard');
+    Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard'); 
 
     Route::prefix('appliances')->name('appliances.')->group(function () {
         Route::get('/', [ApplianceController::class, 'index'])->name('index');

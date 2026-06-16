@@ -26,7 +26,7 @@ class StoreApplianceRequest extends FormRequest
             'name' => ['required', 'string', 'max:255'],
             'watts' => ['required', 'integer', 'min:1'],
             'type' => ['required', 'in:essential,generator'],
-            'daily_runtime' => ['nullable', 'float'],
+            'daily_runtime' => ['nullable', 'numeric'],
             'icon' => ['nullable', 'string', 'max:255'],
         ];
     }

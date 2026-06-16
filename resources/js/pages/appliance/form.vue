@@ -9,6 +9,7 @@ const props = defineProps({
 const form = useForm({
     name: props.appliance?.name || '',
     watts: props.appliance?.watts || '',
+    daily_runtime: props.appliance?.daily_runtime || '',
     type: props.appliance?.type || 'essential',
     icon: props.appliance?.icon || ''
 })
@@ -34,6 +35,9 @@ const submit = () => {
 
         <label class="text-sm text-gray-500 block mb-1">Power Consumption (Watts)</label>
         <input v-model="form.watts" type="number" placeholder="Watts" class="w-full border p-2 rounded" />
+
+        <label class="text-sm text-gray-500 block mb-1">Daily Runtime (Hours)</label>
+        <input v-model="form.daily_runtime" type="number" placeholder="Daily runtime in hours" class="w-full border p-2 rounded" />
 
         <label class="text-sm text-gray-500 block mb-1">Load Type</label>
         <select v-model="form.type" class="w-full border p-2 rounded">

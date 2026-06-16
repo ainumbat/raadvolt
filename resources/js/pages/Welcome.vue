@@ -31,6 +31,7 @@ const addAppliance = (appliance) => {
         icon: appliance.icon,
         type: appliance.type || 'essential',
         quantity: appliance.quantity || 1,
+        daily_runtime: appliance.daily_runtime,
     })
 }
 
@@ -91,6 +92,8 @@ const requiredSolarCapacity = computed(() => {
     return Math.ceil(totalLoad.value * 1.3)
 })
 
+const wire_length = ref(15)
+
 const backup_hours = ref(3)
 const requiredBatteryCapacity = computed(() => {
     return Math.ceil((essentialLoad.value * 1.2) * backup_hours.value)
@@ -122,27 +125,30 @@ const form = useForm({
     total_load: '',
     essential_load: '',
     generator_load: '',
+    wire_length: '',
     backup_hours: '',
     rows: []
 })
 
-const submitLead = () => {
+const requestReport = () => {
     form.total_load = totalLoad.value,
     form.essential_load = essentialLoad.value,
     form.generator_load = generatorLoad.value,
+    form.wire_length = wire_length.value,
     form.backup_hours = backup_hours.value
     
     form.rows = rows.value.map(row => ({
         appliance_id: row.appliance_id,
         watts: row.watts,
         quantity: row.quantity,
+        daily_runtime: row.daily_runtime,
         type: row.type
     }))
 
     form.post('/solar-calculations', {
         preserveScroll: true,
         onSuccess: () => {
-            showLeadModal.value = false
+            showReportModal.value = false
             form.reset()
         }
     })
@@ -150,10 +156,10 @@ const submitLead = () => {
 
 onMounted(() => {
     [
-        { id: 1, quantity: 5 }, // 5 Fans
-        { id: 2, quantity: 8 }, // 8 LED Lights
-        { id: 6, quantity: 1 }, // 1 Fridge
-        { id: 8, quantity: 1 }, // 1 Iron
+        { id: 1, quantity: 5, daily_runtime: 20 }, // 5 Fans
+        { id: 2, quantity: 8, daily_runtime: 6 }, // 8 LED Lights
+        { id: 6, quantity: 1, daily_runtime: 16 }, // 1 Fridge
+        { id: 8, quantity: 1, daily_runtime: 1 }, // 1 Iron
     ].forEach(item => {
         const appliance = getAppliance(item.id)
 
@@ -415,6 +421,15 @@ onMounted(() => {
                                     </div>
 
                                     <div>
+                                        <label class="text-xs text-gray-500 block mb-1">Wire Length (feet)</label>
+                                        <input
+                                            v-model="form.wire_length"
+                                            placeholder="length in feet"
+                                            class="w-full rounded-sm border border-green-600"
+                                        />
+                                    </div>
+
+                                    <div>
                                         <label class="text-xs text-gray-500 block mb-1">Email (Optional)</label>
                                         <input
                                             v-model="form.email"
@@ -425,7 +440,7 @@ onMounted(() => {
 
                                     <div>
                                         <button
-                                            @click="submitLead"
+                                            @click="requestReport"
                                             class="flex gap-3 justify-center w-full bg-green-600 text-white py-2 rounded cursor-pointer"
                                         >
                                             <component :is="LucideIcons.Sheet" /> Generate Report
@@ -488,7 +503,7 @@ onMounted(() => {
                                             <input
                                                 type="number"
                                                 v-model.number="row.watts"
-                                                class="w-full rounded-lg border-green-200 focus:border-green-500 focus:ring-green-500"
+                                                class="w-full rounded-lg px-2 bg-green-200 focus:border-green-500 focus:ring-green-500"
                                             />
                                         </div>
 
@@ -500,7 +515,7 @@ onMounted(() => {
                                             <input
                                                 type="number"
                                                 v-model.number="row.quantity"
-                                                class="w-full rounded-lg border-green-200 focus:border-green-500 focus:ring-green-500"
+                                                class="w-full rounded-lg px-2 bg-green-200 focus:border-green-500 focus:ring-green-500"
                                             />
                                         </div>
 
@@ -512,7 +527,35 @@ onMounted(() => {
                                             <input
                                                 type="number"
                                                 :value="row.watts * row.quantity"
-                                                class="w-full rounded-lg border-green-200 focus:border-green-500 focus:ring-green-500"
+                                                class="w-full rounded-lg px-2 bg-green-200 focus:border-green-500 focus:ring-green-500"
+                                            />
+                                        </div>
+                                    </div>
+
+                                    <!-- Daily Runtime -->
+                                    <div class="grid grid-cols-2 gap-3 mb-4">
+                                        <div>
+                                            <label class="text-xs text-gray-500 block mb-1">
+                                                Daily Runtime (hours)
+                                            </label>
+
+                                            <input
+                                                type="number"
+                                                v-model.number="row.daily_runtime"
+                                                class="w-full rounded-lg px-2 bg-green-200 focus:border-blue-500 focus:ring-green-500"
+                                            />
+                                        </div>
+
+                                        <div>
+                                            <label class="text-xs text-gray-500 block mb-1">
+                                                Time
+                                            </label>
+
+                                            <input
+                                                type="text"
+                                                :value="`${row.daily_runtime * 60} minutes`"
+                                                readonly
+                                                class="w-full rounded-lg px-2 bg-gray-100 focus:border-green-500 focus:ring-green-500"
                                             />
                                         </div>
                                     </div>
@@ -559,7 +602,7 @@ onMounted(() => {
                                 >
                                     <div class="flex flex-col items-center justify-center text-center space-y-2">
                                         <div 
-                                            class="w-14 h-14 flex items-center justify-center rounded-full bg-gradient-to-r from-green-500 to-yellow-200 text-white shadow"
+                                            class="w-14 h-14 flex items-center justify-center rounded-full shadow-xl bg-gradient-to-r from-green-500 to-yellow-200 text-white shadow"
                                             @click="showApplianceModal = true"
                                         >
                                             <component :is="LucideIcons.Plus" :size="28" />
@@ -577,6 +620,10 @@ onMounted(() => {
                                                 <component :is="LucideIcons.Sheet" />
                                             </button>
                                         </div>
+
+                                        <span class="text-green-700 font-semibold text-sm">
+                                            Generate Report
+                                        </span>
                                     </div>
                                 </div>
                             </div>
