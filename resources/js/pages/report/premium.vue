@@ -1,5 +1,6 @@
 <script setup>
-import { Download, Sun, Battery, Zap, TriangleAlert } from 'lucide-vue-next'
+import { ref } from 'vue'
+import { Download, Sun, Battery, Zap, TriangleAlert, Copy, Check } from 'lucide-vue-next'
 import html2pdf from 'html2pdf.js'
 
 const props = defineProps({
@@ -19,12 +20,77 @@ const downloadPdf = () => {
         }
     })
 }
+
+const viewMode = ref('pretty')
+
+const copied = ref(false)
+
+const copyJson = async () => {
+    try {
+        await navigator.clipboard.writeText(
+            JSON.stringify(props.report, null, 2)
+        )
+
+        copied.value = true
+
+        setTimeout(() => {
+            copied.value = false
+        }, 2000)
+    } catch (err) {
+        console.error(err)
+    }
+}
 </script>
 
 <template>
     <div class="min-h-screen bg-gray-100 py-8">
+        <div class="flex gap-0">
 
-        <div id="report" class="max-w-6xl mx-auto bg-white shadow-xl rounded-xl overflow-hidden">
+            <button
+                @click="viewMode = 'pretty'"
+                :class="[
+                    'px-4 py-2 rounded-lg font-medium',
+                    viewMode === 'pretty'
+                        ? 'bg-green-400 text-white'
+                        : 'bg-gray-200 text-gray-700'
+                ]"
+            >
+                Pretty View
+            </button>
+
+            <button
+                @click="viewMode = 'raw'"
+                :class="[
+                    'px-4 py-2 rounded-lg font-medium',
+                    viewMode === 'raw'
+                        ? 'bg-green-400 text-white'
+                        : 'bg-gray-200 text-gray-700'
+                ]"
+            >
+                Raw JSON
+            </button>
+
+        </div>
+
+        <!-- Raw JSON view -->
+        <div v-if="viewMode === 'raw'">
+            <pre class="bg-slate-900 text-green-400 p-6 rounded-xl overflow-auto text-xs max-h-[80vh]">
+                <div class="flex justify-end mb-3">
+                    <button
+                        @click="copyJson"
+                        class="flex items-center gap-2 px-3 py-2 bg-gray-500 text-white rounded-md hover:bg-green-700"
+                    >
+                        <Check v-if="copied" :size="16" />
+                        <Copy v-else :size="16" />
+                    </button>
+                </div>
+
+                {{ JSON.stringify(props.report, null, 2) }}
+            </pre>
+        </div>
+
+        <!-- Pretty view -->
+        <div v-if="viewMode === 'pretty'" id="report" class="max-w-6xl mx-auto bg-white shadow-xl rounded-xl overflow-hidden">
 
             <!-- HEADER -->
             <div

@@ -139,6 +139,10 @@ const viewItems = (report) => {
                             </th>
 
                             <th class="p-2 text-center">
+                                Daily Runtime
+                            </th>
+
+                            <th class="p-2 text-center">
                                 Load
                             </th>
                         </tr>
@@ -171,6 +175,10 @@ const viewItems = (report) => {
                                 >
                                     {{ item.type }}
                                 </span>
+                            </td>
+
+                            <td class="p-2 text-center">
+                                {{ item.daily_runtime }} hours
                             </td>
 
                             <td class="p-2 text-center">
