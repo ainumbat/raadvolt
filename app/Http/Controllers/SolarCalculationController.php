@@ -83,11 +83,17 @@ class SolarCalculationController extends Controller
      */
     public function show($report_id)
     {
-        $data = SolarCalculation::with(['items.appliance'])->find($report_id);
-        $premium_report = $this->generateDetailedReport($data);
+        $report = SolarCalculation::with(['items.appliance'])->findOrFail($report_id);
+
+        if (empty($report->report_data)) {
+            $this->generateDetailedReport($report);
+
+            // Reload updated value from database
+            $report->refresh();
+        }
 
         return Inertia::render('report/premium', [
-            'report' => $premium_report
+            'report' => $report
         ]);
     }
 
@@ -318,7 +324,7 @@ class SolarCalculationController extends Controller
                 'Your load is relatively high. Consider dividing loads into essential and non-essential circuits.';
         }
 
-        return [
+        $report_data = [
 
             'customer' => [
                 'name' => $report->name,
@@ -327,7 +333,10 @@ class SolarCalculationController extends Controller
                 'report_id' => 'RV-0900' . $report->id,
             ],
 
-            'load_summary' => [
+            ///////////////////////////////////////////////////////////
+            'report_id' => 'RV-0900' . $report->id,
+
+            'summary' => [
                 'essential_load' => $essentialLoad,
                 'generator_load' => $generatorLoad,
                 'total_load' => $totalLoad,
@@ -386,5 +395,9 @@ class SolarCalculationController extends Controller
 
             'warnings' => $warnings,
         ];
+
+        $report->update([
+            'report_data' => $report_data
+        ]);
     }
 }

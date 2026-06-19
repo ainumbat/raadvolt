@@ -21,6 +21,10 @@ class SolarCalculation extends Model
         'report_data',
     ];
 
+    protected $casts = [
+        'report_data' => 'array',
+    ];
+
     public function items()
     {
         return $this->hasMany(SolarCalculationItem::class);

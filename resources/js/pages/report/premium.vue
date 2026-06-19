@@ -144,7 +144,7 @@ const copyJson = async () => {
                         </div>
 
                         <div class="font-semibold">
-                            {{ report.customer.name }}
+                            {{ report.name }}
                         </div>
                     </div>
 
@@ -154,7 +154,7 @@ const copyJson = async () => {
                         </div>
 
                         <div class="font-semibold">
-                            {{ report.customer.whatsapp }}
+                            {{ report.whatsapp }}
                         </div>
                     </div>
 
@@ -164,7 +164,7 @@ const copyJson = async () => {
                         </div>
 
                         <div class="font-semibold">
-                            {{ report.customer.email }}
+                            {{ report.email }}
                         </div>
                     </div>
 
@@ -174,7 +174,7 @@ const copyJson = async () => {
                         </div>
 
                         <div class="font-semibold">
-                            {{ report.customer.report_id }}
+                            {{ report.report_data.report_id }}
                         </div>
                     </div>
 
@@ -193,7 +193,7 @@ const copyJson = async () => {
                     </h3>
 
                     <div class="text-4xl font-bold">
-                        {{ (report.load_summary.essential_load / 1000).toFixed(2) }}
+                        {{ (report.report_data.summary.essential_load / 1000).toFixed(2) }}
                         KW
                     </div>
 
@@ -207,7 +207,7 @@ const copyJson = async () => {
                     </h3>
 
                     <div class="text-4xl font-bold">
-                        {{ (report.load_summary.generator_load / 1000).toFixed(2) }}
+                        {{ (report.report_data.summary.generator_load / 1000).toFixed(2) }}
                         KW
                     </div>
 
@@ -221,7 +221,7 @@ const copyJson = async () => {
                     </h3>
 
                     <div class="text-4xl font-bold">
-                        {{ (report.load_summary.total_load / 1000).toFixed(2) }}
+                        {{ (report.report_data.summary.total_load / 1000).toFixed(2) }}
                         KW
                     </div>
 
@@ -257,7 +257,7 @@ const copyJson = async () => {
                     <!-- Items -->
                     <div class="divide-y">
                         <div
-                            v-for="item in report.load_summary.essential_appliances"
+                            v-for="item in report.report_data.summary.essential_appliances"
                             class="grid grid-cols-12 px-5 py-3 hover:bg-green-50 transition">
 
                             <div class="col-span-6 font-medium text-gray-800">
@@ -306,7 +306,7 @@ const copyJson = async () => {
                     <!-- Items -->
                     <div class="divide-y">
                         <div
-                            v-for="item in report.load_summary.generator_appliances"
+                            v-for="item in report.report_data.summary.generator_appliances"
                             class="grid grid-cols-12 px-5 py-3 hover:bg-yellow-50 transition">
 
                             <div class="col-span-6 font-medium text-gray-800">
@@ -341,7 +341,7 @@ const copyJson = async () => {
 
                     <Sun />
 
-                    <h2 class="text-xl font-bold">{{ report.plan_1.title }}</h2>
+                    <h2 class="text-xl font-bold">{{ report.report_data.plan_1.title }}</h2>
 
                 </div>
 
@@ -355,7 +355,7 @@ const copyJson = async () => {
                             </div>
 
                             <div class="font-bold text-lg">
-                                {{ report.plan_1.inverter_kw }} KW
+                                {{ report.report_data.plan_1.inverter_kw }} KW
                             </div>
                         </div>
 
@@ -365,7 +365,7 @@ const copyJson = async () => {
                             </div>
 
                             <div class="font-bold text-lg">
-                                {{ report.plan_1.solar_kw }} KW
+                                {{ report.report_data.plan_1.solar_kw }} KW
                             </div>
                         </div>
 
@@ -375,7 +375,7 @@ const copyJson = async () => {
                             </div>
 
                             <div class="font-bold text-lg">
-                                {{ report.plan_1.battery }} KW
+                                {{ report.report_data.plan_1.battery }} KW
                             </div>
                         </div>
 
@@ -385,7 +385,7 @@ const copyJson = async () => {
                             </div>
 
                             <div class="font-bold text-lg">
-                                {{ report.plan_1.roi_time }}
+                                {{ report.report_data.plan_1.roi_time }}
                             </div>
                         </div>
 
@@ -404,7 +404,7 @@ const copyJson = async () => {
 
                     <Sun />
 
-                    <h2 class="text-xl font-bold">{{ report.plan_2.title }}</h2>
+                    <h2 class="text-xl font-bold">{{ report.report_data.plan_2.title }}</h2>
 
                 </div>
 
@@ -418,7 +418,7 @@ const copyJson = async () => {
                             </div>
 
                             <div class="font-bold text-lg">
-                                {{ report.plan_2.inverter_kw }} KW
+                                {{ report.report_data.plan_2.inverter_kw }} KW
                             </div>
                         </div>
 
@@ -428,7 +428,7 @@ const copyJson = async () => {
                             </div>
 
                             <div class="font-bold text-lg">
-                                {{ report.plan_2.solar_kw }} KW
+                                {{ report.report_data.plan_2.solar_kw }} KW
                             </div>
                         </div>
 
@@ -438,7 +438,7 @@ const copyJson = async () => {
                             </div>
 
                             <div class="font-bold text-lg">
-                                {{ report.plan_2.surplus_kw }}
+                                {{ report.report_data.plan_2.surplus_kw }}
                             </div>
                         </div>
 
@@ -448,7 +448,7 @@ const copyJson = async () => {
                             </div>
 
                             <div class="font-bold text-lg">
-                                {{ report.plan_2.monthly_export_units }}
+                                {{ report.report_data.plan_2.monthly_export_units }}
                             </div>
                         </div>
 
@@ -458,7 +458,7 @@ const copyJson = async () => {
                             </div>
 
                             <div class="font-bold text-lg">
-                                {{ report.plan_2.estimated_income }}
+                                {{ report.report_data.plan_2.estimated_income }}
                             </div>
                         </div>
 
@@ -468,7 +468,7 @@ const copyJson = async () => {
                             </div>
 
                             <div class="font-bold text-lg">
-                                {{ report.plan_2.roi_time }}
+                                {{ report.report_data.plan_2.roi_time }}
                             </div>
                         </div>
 
@@ -487,7 +487,7 @@ const copyJson = async () => {
 
                     <Sun />
 
-                    <h2 class="text-xl font-bold">{{ report.plan_3.title }}</h2>
+                    <h2 class="text-xl font-bold">{{ report.report_data.plan_3.title }}</h2>
 
                 </div>
 
@@ -501,7 +501,7 @@ const copyJson = async () => {
                             </div>
 
                             <div class="font-bold text-lg">
-                                {{ report.plan_3.inverter_kw }} KW
+                                {{ report.report_data.plan_3.inverter_kw }} KW
                             </div>
                         </div>
 
@@ -511,7 +511,7 @@ const copyJson = async () => {
                             </div>
 
                             <div class="font-bold text-lg">
-                                {{ report.plan_3.solar_kw }} KW
+                                {{ report.report_data.plan_3.solar_kw }} KW
                             </div>
                         </div>
 
@@ -521,7 +521,7 @@ const copyJson = async () => {
                             </div>
 
                             <div class="font-bold text-lg">
-                                ({{ report.plan_3.battery_kwh }}kwh) {{ report.plan_3.battery_voltage }}V, {{ report.plan_3.battery_ah }}amp
+                                ({{ report.report_data.plan_3.battery_kwh }}kwh) {{ report.report_data.plan_3.battery_voltage }}V, {{ report.report_data.plan_3.battery_ah }}amp
                             </div>
                         </div>
 
@@ -531,7 +531,7 @@ const copyJson = async () => {
                             </div>
 
                             <div class="font-bold text-lg">
-                                {{ report.plan_3.roi_time }}
+                                {{ report.report_data.plan_3.roi_time }}
                             </div>
                         </div>
 
@@ -550,7 +550,7 @@ const copyJson = async () => {
 
                     <Sun />
 
-                    <h2 class="text-xl font-bold">{{ report.plan_4.title }}</h2>
+                    <h2 class="text-xl font-bold">{{ report.report_data.plan_4.title }}</h2>
 
                 </div>
 
@@ -564,7 +564,7 @@ const copyJson = async () => {
                             </div>
 
                             <div class="font-bold text-lg">
-                                {{ report.plan_4.inverter_kw }} KW
+                                {{ report.report_data.plan_4.inverter_kw }} KW
                             </div>
                         </div>
 
@@ -574,7 +574,7 @@ const copyJson = async () => {
                             </div>
 
                             <div class="font-bold text-lg">
-                                {{ report.plan_4.solar_kw }} KW
+                                {{ report.report_data.plan_4.solar_kw }} KW
                             </div>
                         </div>
 
@@ -584,7 +584,7 @@ const copyJson = async () => {
                             </div>
 
                             <div class="font-bold text-lg">
-                                {{ report.plan_4.battery_kwh }}
+                                {{ report.report_data.plan_4.battery_kwh }}
                             </div>
                         </div>
 
@@ -594,7 +594,7 @@ const copyJson = async () => {
                             </div>
 
                             <div class="font-bold text-lg">
-                                {{ report.plan_4.night_hours }} hours
+                                {{ report.report_data.plan_4.night_hours }} hours
                             </div>
                         </div>
 
@@ -604,7 +604,7 @@ const copyJson = async () => {
                             </div>
 
                             <div class="font-bold text-lg">
-                                {{ report.plan_4.roi_time }}
+                                {{ report.report_data.plan_4.roi_time }}
                             </div>
                         </div>
 
@@ -622,7 +622,7 @@ const copyJson = async () => {
                 </h2>
 
                 <div
-                    v-for="tip in report.tips"
+                    v-for="tip in report.report_data.tips"
                     class="bg-green-50 border-l-4 border-green-500 p-4 mb-3 rounded">
 
                     {{ tip }}
@@ -633,7 +633,7 @@ const copyJson = async () => {
 
             <!-- Warnings -->
             <div
-                v-if="report.warnings.length"
+                v-if="report.report_data.warnings.length"
                 class="mx-8 my-6">
 
                 <h2
@@ -643,7 +643,7 @@ const copyJson = async () => {
                 </h2>
 
                 <div
-                    v-for="warning in report.warnings"
+                    v-for="warning in report.report_data.warnings"
                     class="bg-red-50 border-l-4 border-red-500 p-4 mb-3 rounded flex gap-3">
 
                     <TriangleAlert />
