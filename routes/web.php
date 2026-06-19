@@ -28,6 +28,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     // Solar Reports
     Route::get('/solar/reports', [SolarCalculationController::class, 'index']);
     Route::get('/solar/{report_id}/premium_report', [SolarCalculationController::class, 'show'])->name('report.premium');
+    Route::put('/reports/{report}/update_json', [SolarCalculationController::class, 'updateJson'])->name('reports.update_json');
 });
 
 require __DIR__.'/settings.php';

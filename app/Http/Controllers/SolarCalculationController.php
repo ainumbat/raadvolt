@@ -85,12 +85,12 @@ class SolarCalculationController extends Controller
     {
         $report = SolarCalculation::with(['items.appliance'])->findOrFail($report_id);
 
-        if (empty($report->report_data)) {
+        // if (empty($report->report_data)) {
             $this->generateDetailedReport($report);
 
             // Reload updated value from database
             $report->refresh();
-        }
+        // }
 
         return Inertia::render('report/premium', [
             'report' => $report
@@ -111,6 +111,21 @@ class SolarCalculationController extends Controller
     public function update(Request $request, SolarCalculation $solarCalculation)
     {
         //
+    }
+
+    public function updateJson(Request $request, SolarCalculation $report)
+    {
+        $data = json_decode($request->report_data, true);
+
+        if (json_last_error() !== JSON_ERROR_NONE) {
+            return back()->withErrors([
+                'report_data' => 'Invalid JSON'
+            ]);
+        }
+        
+        $report->update(['report_data' => $data]);
+        dd($data);
+        return back()->with('success', 'Report updated');
     }
 
     /**
@@ -142,10 +157,20 @@ class SolarCalculationController extends Controller
 
             // $totalLoad += $load;
             if ($item->type == 'essential') {
-                $essentialLoad += $load;
-                $essentialAppliances[] = $item;
+                // $essentialLoad += $load;
+                $essentialAppliances[] = [
+                    'name' => $item->appliance->name,
+                    'watts' => $item->watts,
+                    'quantity' => $item->quantity,
+                    'daily_runtime' => $item->daily_runtime." hours"
+                ];
             } else {
-                $generatorAppliances[] = $item;
+                $generatorAppliances[] = [
+                    'name' => $item->appliance->name,
+                    'watts' => $item->watts,
+                    'quantity' => $item->quantity,
+                    'daily_runtime' => $item->daily_runtime." hours"
+                ];
             }
 
             $name = strtolower($item->appliance->name);
@@ -325,21 +350,15 @@ class SolarCalculationController extends Controller
         }
 
         $report_data = [
-
-            'customer' => [
-                'name' => $report->name,
-                'email' => $report->email,
-                'whatsapp' => $report->whatsapp,
-                'report_id' => 'RV-0900' . $report->id,
-            ],
-
-            ///////////////////////////////////////////////////////////
             'report_id' => 'RV-0900' . $report->id,
 
             'summary' => [
-                'essential_load' => $essentialLoad,
-                'generator_load' => $generatorLoad,
-                'total_load' => $totalLoad,
+                'essential_load' => $essentialLoad." watts",
+                'essential_load_kw' => round($essentialLoad / 1000, 2)." KW",
+                'generator_load' => $generatorLoad." watts",
+                'generator_load_kw' => round($generatorLoad / 1000, 2)." KW",
+                'total_load' => $totalLoad." watts",
+                'total_load_kw' => round($totalLoad / 1000, 2)." KW",
                 'essential_appliances' => $essentialAppliances,
                 'generator_appliances' => $generatorAppliances,
             ],

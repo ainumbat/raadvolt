@@ -1,5 +1,6 @@
 <script setup>
 import { ref } from 'vue'
+import { useForm } from '@inertiajs/vue3'
 import { Download, Sun, Battery, Zap, TriangleAlert, Copy, Check } from 'lucide-vue-next'
 import html2pdf from 'html2pdf.js'
 
@@ -40,6 +41,20 @@ const copyJson = async () => {
         console.error(err)
     }
 }
+
+const form = useForm({
+    report_data: JSON.stringify(props.report.report_data, null, 2)
+})
+
+const saveJson = () => {
+    try {
+        JSON.parse(form.report_data) // validate JSON
+
+        form.put(`/reports/${props.report.id}/update_json/`)
+    } catch (e) {
+        alert('Invalid JSON')
+    }
+}
 </script>
 
 <template>
@@ -74,19 +89,29 @@ const copyJson = async () => {
 
         <!-- Raw JSON view -->
         <div v-if="viewMode === 'raw'">
-            <pre class="bg-slate-900 text-green-400 p-6 rounded-xl overflow-auto text-xs max-h-[80vh]">
-                <div class="flex justify-end mb-3">
+            <div class="bg-slate-900 p-6 rounded-xl">
+                <div class="flex justify-end gap-2 mb-3">
                     <button
                         @click="copyJson"
-                        class="flex items-center gap-2 px-3 py-2 bg-gray-500 text-white rounded-md hover:bg-green-700"
+                        class="px-3 py-2 bg-gray-500 text-white rounded-md"
                     >
-                        <Check v-if="copied" :size="16" />
-                        <Copy v-else :size="16" />
+                        Copy
+                    </button>
+
+                    <button
+                        @click="saveJson"
+                        :disabled="form.processing"
+                        class="px-3 py-2 bg-green-600 text-white rounded-md"
+                    >
+                        Save
                     </button>
                 </div>
 
-                {{ JSON.stringify(props.report, null, 2) }}
-            </pre>
+                <textarea
+                    v-model="form.report_data"
+                    class="w-full h-[80vh] bg-slate-900 text-green-400 font-mono text-xs border-0 focus:ring-0"
+                />
+            </div>
         </div>
 
         <!-- Pretty view -->
@@ -193,8 +218,7 @@ const copyJson = async () => {
                     </h3>
 
                     <div class="text-4xl font-bold">
-                        {{ (report.report_data.summary.essential_load / 1000).toFixed(2) }}
-                        KW
+                        {{ report.report_data.summary.essential_load_kw }}
                     </div>
 
                 </div>
@@ -207,8 +231,7 @@ const copyJson = async () => {
                     </h3>
 
                     <div class="text-4xl font-bold">
-                        {{ (report.report_data.summary.generator_load / 1000).toFixed(2) }}
-                        KW
+                        {{ report.report_data.summary.generator_load_kw }}
                     </div>
 
                 </div>
@@ -221,8 +244,7 @@ const copyJson = async () => {
                     </h3>
 
                     <div class="text-4xl font-bold">
-                        {{ (report.report_data.summary.total_load / 1000).toFixed(2) }}
-                        KW
+                        {{ report.report_data.summary.total_load_kw }}
                     </div>
 
                 </div>
@@ -261,7 +283,7 @@ const copyJson = async () => {
                             class="grid grid-cols-12 px-5 py-3 hover:bg-green-50 transition">
 
                             <div class="col-span-6 font-medium text-gray-800">
-                                {{ item.appliance.name }}
+                                {{ item.name }}
                             </div>
 
                             <div class="col-span-2 text-center text-gray-600">
@@ -310,7 +332,7 @@ const copyJson = async () => {
                             class="grid grid-cols-12 px-5 py-3 hover:bg-yellow-50 transition">
 
                             <div class="col-span-6 font-medium text-gray-800">
-                                {{ item.appliance.name }}
+                                {{ item.name }}
                             </div>
 
                             <div class="col-span-2 text-center text-gray-600">
