@@ -85,12 +85,12 @@ class SolarCalculationController extends Controller
     {
         $report = SolarCalculation::with(['items.appliance'])->findOrFail($report_id);
 
-        // if (empty($report->report_data)) {
+        if (empty($report->report_data)) {
             $this->generateDetailedReport($report);
 
             // Reload updated value from database
             $report->refresh();
-        // }
+        }
 
         return Inertia::render('report/premium', [
             'report' => $report
@@ -124,7 +124,7 @@ class SolarCalculationController extends Controller
         }
         
         $report->update(['report_data' => $data]);
-        dd($data);
+        
         return back()->with('success', 'Report updated');
     }
 
