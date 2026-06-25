@@ -547,7 +547,14 @@ const saveJson = () => {
                             class="grid grid-cols-12 px-5 py-3 hover:bg-green-50 transition">
 
                             <div class="col-span-6 font-medium text-gray-800">
-                                {{ item.name }}
+                                <div class="flex gap-2">
+                                    <component
+                                        :is="LucideIcons[item.icon] || LucideIcons.CircleQuestionMark"
+                                        size="22"
+                                        class="text-green-600"
+                                    />
+                                    {{ item.name }}
+                                </div>
                             </div>
 
                             <div class="col-span-2 text-center text-gray-600">
@@ -596,7 +603,14 @@ const saveJson = () => {
                             class="grid grid-cols-12 px-5 py-3 hover:bg-yellow-50 transition">
 
                             <div class="col-span-6 font-medium text-gray-800">
-                                {{ item.name }}
+                                <div class="flex gap-2">
+                                    <component
+                                        :is="LucideIcons[item.icon] || LucideIcons.CircleQuestionMark"
+                                        size="22"
+                                        class="text-green-600"
+                                    />
+                                    {{ item.name }}
+                                </div>
                             </div>
 
                             <div class="col-span-2 text-center text-gray-600">

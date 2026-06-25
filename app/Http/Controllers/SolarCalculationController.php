@@ -160,6 +160,7 @@ class SolarCalculationController extends Controller
                 // $essentialLoad += $load;
                 $essentialAppliances[] = [
                     'name' => $item->appliance->name,
+                    'icon' => $item->appliance->icon,
                     'watts' => $item->watts,
                     'quantity' => $item->quantity,
                     'daily_runtime' => $item->daily_runtime." hours"
@@ -167,6 +168,7 @@ class SolarCalculationController extends Controller
             } else {
                 $generatorAppliances[] = [
                     'name' => $item->appliance->name,
+                    'icon' => $item->appliance->icon,
                     'watts' => $item->watts,
                     'quantity' => $item->quantity,
                     'daily_runtime' => $item->daily_runtime." hours"
@@ -350,9 +352,11 @@ class SolarCalculationController extends Controller
         }
 
         $report_data = [
+            'for_gemini' => 'Calculate and update each section according to users load and ai_instruction given in each section',
             'report_id' => 'RV-0900' . $report->id,
 
             'summary' => [
+                "ai_instruction" => "Do not change this section except the tilt angle according to location",
                 'essential_load' => $essentialLoad." watts",
                 'essential_load_kw' => round($essentialLoad / 1000, 2)." KW",
                 'generator_load' => $generatorLoad." watts",
@@ -361,45 +365,181 @@ class SolarCalculationController extends Controller
                 'total_load_kw' => round($totalLoad / 1000, 2)." KW",
                 'essential_appliances' => $essentialAppliances,
                 'generator_appliances' => $generatorAppliances,
+                'location' => 'Rawalpindi',
+                'tilt_angle' => 17,
             ],
 
             'plan_1' => [
-                'title' => 'Budget Solar Setup',
-                'inverter_kw' => $plan1Inverter,
-                'solar_kw' => $plan1Solar,
-                'battery' => false,
-                'roi_time' => '27 months',
+                "ai_instruction" => "Update plan_1 according to users essential + generator load, suggest suitable budget friendly inverter with minimum number of solar panels so that user can run his daytime load directly on solar and also give updated prices of items from given location/area.",
+                "title" => "Budget Solar Setup",
+                "battery" => false,
+                "roi_time" => "24 months",
+                "solar_kw" => 1,
+                "description" => "Lowest cost solar setup designed to run all essential appliances and selected heavy appliances during daylight hours.",
+                "inverter_kw" => 1,
+                "limitations" => [
+                  "No backup during load shedding",
+                  "Heavy loads must be used one at a time"
+                ],
+                "estimated_cost" => 110000,
+                "monthly_savings" => 6500,
+                "supported_loads" => ["Fans", "Lights", "Fridge"],
+                "backup_available" => false,
+                "future_upgrade_path" => "Can be upgraded to Hybrid System",
+                "recommended_equipment" => [
+                  "panel_type" => "N-Type TOPCon",
+                  "inverter_type" => "PV Inverter"
+                ],
+                "net_metering_supported" => false,
+                "daytime_supported_loads" => ["Iron", "Motor", "Washing Machine"],
+                "recommended_panel_count" => 2,
+                "recommended_panel_wattage" => 645,
+                "items_list" => [
+                    ["name" => "PV Inverter", "quantity" => 1, "price" => 40000],
+                    ["name" => "Solar Panels", "quantity" => 4, "price" => 104000],
+                    ["name" => "DB Box", "quantity" => 1, "price" => 3000],
+                    ["name" => "DC Breaker", "quantity" => 1, "price" => 2000],
+                    ["name" => "AC Breaker", "quantity" => 1, "price" => 1200],
+                    ["name" => "Voltage Protector", "quantity" => 1, "price" => 2500],
+                    ["name" => "DC Wire (4mm) 45 feet double", "quantity" => 1, "price" => 12000],
+                    ["name" => "AC Wire 7/0.36 6 feet double", "quantity" => 1, "price" => 600],
+                    ["name" => "MC4 Connector", "quantity" => 2, "price" => 300],
+                    ["name" => "Galvanized Nuts", "quantity" => 16, "price" => 400],
+                    ["name" => "L2 Stand", "quantity" => 2, "price" => 5200],
+                    ["name" => "Rawal Bolt", "quantity" => 16, "price" => 5200],
+                    ["name" => "Zip tie", "quantity" => 6, "price" => 100],
+                    ["name" => "Transportation", "quantity" => 0, "price" => 4000],
+                    ["name" => "Installation", "quantity" => 0, "price" => 10000],
+                ]
             ],
 
             'plan_2' => [
-                'title' => 'Ongrid Net Metering',
-                'inverter_kw' => $plan1Inverter + 2,
-                'solar_kw' => $plan2Solar,
-                'surplus_kw' => $surplusKw,
-                'monthly_export_units' => $monthlyExportUnits,
-                'estimated_income' => $monthlyExportIncome,
-                'roi_time' => '32 months',
+                "ai_instruction" => "Update plan_2 according to users load and maximum reduction in electricity bill, suggest suitable ongrid inverter with number of solar panels so that user can get maximum production + update prices of items from given location/area.",
+                "title" => "Ongrid Net Metering",
+                "roi_time" => "36 months",
+                "solar_kw" => 6,
+                "surplus_kw" => 3.1,
+                "description" => "Best solution for maximum bill reduction and export of excess energy.",
+                "inverter_kw" => 3,
+                "limitations" => [
+                  "No backup during power outage",
+                  "Requires approved net metering"
+                ],
+                "estimated_cost" => 450000,
+                "grid_dependency" => true,
+                "monthly_savings" => 14000,
+                "backup_available" => false,
+                "estimated_income" => 4650,
+                "future_upgrade_path" => "Can add Hybrid Inverter and Battery",
+                "monthly_export_units" => 465,
+                "net_metering_supported" => true,
+                "recommended_panel_count" => 10,
+                "recommended_panel_wattage" => 645,
+                "items_list" => [
+                    ["name" => "OnGrid Inverter", "quantity" => 1, "price" => 40000],
+                    ["name" => "Solar Panels", "quantity" => 4, "price" => 104000],
+                    ["name" => "Green Meter", "quantity" => 1, "price" => 120000],
+                    ["name" => "DB Box", "quantity" => 1, "price" => 3000],
+                    ["name" => "DC Breaker", "quantity" => 1, "price" => 2000],
+                    ["name" => "AC Breaker", "quantity" => 1, "price" => 1200],
+                    ["name" => "Voltage Protector", "quantity" => 1, "price" => 2500],
+                    ["name" => "DC Wire (4mm) 45 feet double", "quantity" => 1, "price" => 12000],
+                    ["name" => "AC Wire 7/0.36 6 feet double", "quantity" => 1, "price" => 600],
+                    ["name" => "MC4 Connector", "quantity" => 2, "price" => 300],
+                    ["name" => "Galvanized Nuts", "quantity" => 16, "price" => 400],
+                    ["name" => "L2 Stand", "quantity" => 2, "price" => 5200],
+                    ["name" => "Rawal Bolt", "quantity" => 16, "price" => 5200],
+                    ["name" => "Zip tie", "quantity" => 6, "price" => 100],
+                    ["name" => "Transportation", "quantity" => 0, "price" => 4000],
+                    ["name" => "Installation", "quantity" => 0, "price" => 10000],
+                ]
             ],
 
             'plan_3' => [
-                'title' => 'Hybrid Backup Solution',
-                'inverter_kw' => $plan1Inverter + 1,
-                'solar_kw' => $plan3Solar,
-                'battery_voltage' => $batteryVoltage,
-                'battery_ah' => $batteryAh,
-                'battery_kwh' => $batteryKwh,
-                'backup_hours' => 4,
-                'roi_time' => '46 months',
+                "ai_instruction" => "Update plan_3 according to users essential load and backup_hours so that user can get backup on essential load, suggest suitable Hybrid inverter with number of solar panels and battery so that user can get maximum production and backup according to his/her needs.",
+                "title" => "Hybrid Backup Solution",
+                "roi_time" => "52 months",
+                "solar_kw" => 2,
+                "battery_ah" => 138,
+                "battery_kwh" => 3.3,
+                "description" => "Balanced solution with battery backup and reduced grid dependency.",
+                "inverter_kw" => 2,
+                "limitations" => [
+                  "Heavy loads not recommended during backup"
+                ],
+                "backup_hours" => 4,
+                "battery_type" => "Lithium Iron Phosphate",
+                "battery_cycles" => 6000,
+                "estimated_cost" => 390000,
+                "battery_voltage" => 24,
+                "monthly_savings" => 9000,
+                "future_upgrade_path" => "Expandable to Complete Offgrid",
+                "supported_backup_load" => "Essential Load Only",
+                "recommended_panel_count" => 4,
+                "recommended_panel_wattage" => 645,
+                "items_list" => [
+                    ["name" => "Hybrid Inverter", "quantity" => 1, "price" => 40000],
+                    ["name" => "Solar Panels", "quantity" => 4, "price" => 104000],
+                    ["name" => "Battery (2.5kwh)", "quantity" => 1, "price" => 104000],
+                    ["name" => "DB Box", "quantity" => 1, "price" => 3000],
+                    ["name" => "DC Breaker", "quantity" => 1, "price" => 2000],
+                    ["name" => "AC Breaker", "quantity" => 1, "price" => 1200],
+                    ["name" => "Voltage Protector", "quantity" => 1, "price" => 2500],
+                    ["name" => "DC Wire (4mm) 45 feet double", "quantity" => 1, "price" => 12000],
+                    ["name" => "AC Wire 7/0.36 6 feet double", "quantity" => 1, "price" => 600],
+                    ["name" => "MC4 Connector", "quantity" => 2, "price" => 300],
+                    ["name" => "Galvanized Nuts", "quantity" => 16, "price" => 400],
+                    ["name" => "L2 Stand", "quantity" => 2, "price" => 5200],
+                    ["name" => "Rawal Bolt", "quantity" => 16, "price" => 5200],
+                    ["name" => "Zip tie", "quantity" => 6, "price" => 100],
+                    ["name" => "Transportation", "quantity" => 0, "price" => 4000],
+                    ["name" => "Installation", "quantity" => 0, "price" => 10000],
+                ]
             ],
 
             'plan_4' => [
-                'title' => 'Complete Offgrid Solution',
-                'inverter_kw' => $offgridInverter + 1,
-                'solar_kw' => $offgridSolar,
-                'battery_kwh' => $offgridBatteryKwh,
-                'night_hours' => 14,
-                'roi_time' => '48 months',
+                "ai_instruction" => "Update plan_4 according to users essential load + limited generator load like ACs so that user can go fully offgrid, suggest suitable Hybrid/OffGrid inverter with number of solar panels and battery bank so that user can get maximum production and 14 hours backup for all the essential appliances and limited generator appliances.",
+                "title" => "Complete Offgrid Solution",
+                "roi_time" => "48 months",
+                "solar_kw" => 8,
+                "battery_kwh" => 56.3,
+                "description" => "Maximum energy independence with full day and night operation.",
+                "inverter_kw" => 5,
+                "limitations" => [
+                  "Highest initial investment"
+                ],
+                "night_hours" => 14,
+                "battery_type" => "Lithium Iron Phosphate",
+                "battery_cycles" => 6000,
+                "estimated_cost" => 1800000,
+                "grid_dependency" => false,
+                "monthly_savings" => 25560,
+                "generator_required" => false,
+                "energy_independence" => "95-100%",
+                "recommended_panel_count" => 14,
+                "recommended_panel_wattage" => 645,
+                "future_expansion_capacity_kw" => 2,
+                "items_list" => [
+                    ["name" => "Hybrid Inverter", "quantity" => 1, "price" => 40000],
+                    ["name" => "Solar Panels", "quantity" => 4, "price" => 104000],
+                    ["name" => "Battery (16kwh)", "quantity" => 1, "price" => 104000],
+                    ["name" => "DB Box", "quantity" => 1, "price" => 3000],
+                    ["name" => "DC Breaker", "quantity" => 1, "price" => 2000],
+                    ["name" => "AC Breaker", "quantity" => 1, "price" => 1200],
+                    ["name" => "Voltage Protector", "quantity" => 1, "price" => 2500],
+                    ["name" => "DC Wire (4mm) 45 feet double", "quantity" => 1, "price" => 12000],
+                    ["name" => "AC Wire 7/0.36 6 feet double", "quantity" => 1, "price" => 600],
+                    ["name" => "MC4 Connector", "quantity" => 2, "price" => 300],
+                    ["name" => "Galvanized Nuts", "quantity" => 16, "price" => 400],
+                    ["name" => "L2 Stand", "quantity" => 2, "price" => 5200],
+                    ["name" => "Rawal Bolt", "quantity" => 16, "price" => 5200],
+                    ["name" => "Zip tie", "quantity" => 6, "price" => 100],
+                    ["name" => "Transportation", "quantity" => 0, "price" => 4000],
+                    ["name" => "Installation", "quantity" => 0, "price" => 10000],
+                ]
             ],
+
+            "ai_instruction" => "Personalize sections like site_checklist, solar_analysis, battery_analysis, financial_analysis, personalized_insights, tips and warnings according to users load and installation setup.",
 
             'tips' => array_merge(
                 $tips,
@@ -412,7 +552,53 @@ class SolarCalculationController extends Controller
                 ]
             ),
 
-            'warnings' => $warnings,
+            "warnings" => array_merge(
+                $warnings,
+                [
+                    "Water pumps require high startup current. Verify inverter surge rating.",
+                    "Iron, heaters and electric stoves should only be used during strong sunlight.",
+                    "Battery backup duration decreases if additional appliances are added.",
+                    "Do not wash solar panels during peak sunlight hours.",
+                    "Improper earthing may damage inverter and panels.",
+                    "Roof shading can significantly reduce solar production."
+                ]
+            ),
+            
+            "site_checklist" => [
+                "Ensure shadow-free roof area.",
+                "Install proper earthing.",
+                "Install Surge Protection Device.",
+                "Use certified solar installer."
+            ],
+
+            "solar_analysis" => [
+                "average_solar_hours" => 5,
+                "expected_panel_life" => "25 years",
+                "recommended_panel_size" => "585W",
+                "recommended_panel_type" => "N-Type TOPCon",
+                "performance_degradation" => "0.4% annually"
+            ],
+            
+            "battery_analysis" => [
+                "replacement_cycle" => "10-15 years",
+                "expected_life_years" => 12,
+                "recommended_technology" => "Lithium Iron Phosphate",
+                "daily_backup_energy_kwh" => 8.3
+            ],
+            
+            "financial_analysis" => [
+                "electricity_rate" => 60,
+                "annual_bill_estimate" => 306720,
+                "monthly_bill_estimate" => 25560,
+                "monthly_units_consumed" => 426
+            ],
+            
+            "personalized_insights" => [
+                "Your refrigerator consumes energy continuously and should remain on the solar-backed circuit.",
+                "Your motor requires high startup current and may need a higher surge inverter rating.",
+                "Your iron should only be operated during peak solar production hours.",
+                "Your load profile is ideal for a Hybrid Solar System."
+            ]
         ];
 
         $report->update([
