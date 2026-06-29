@@ -6,6 +6,9 @@ import { register } from '@/routes';
 import { ref, computed, onMounted } from 'vue'
 import * as LucideIcons from 'lucide-vue-next'
 
+import { LMap, LTileLayer, LMarker } from '@vue-leaflet/vue-leaflet'
+import 'leaflet/dist/leaflet.css'
+
 const props = defineProps({
     months: Array,
     appliances: Array
@@ -92,7 +95,7 @@ const requiredSolarCapacity = computed(() => {
     return Math.ceil(totalLoad.value * 1.3)
 })
 
-const wire_length = ref(15)
+const wire_length = ref(17)
 
 const backup_hours = ref(3)
 const requiredBatteryCapacity = computed(() => {
@@ -126,7 +129,9 @@ const form = useForm({
     essential_load: '',
     generator_load: '',
     wire_length: '',
+    area: '',
     backup_hours: '',
+    city: '',
     rows: []
 })
 
@@ -134,7 +139,7 @@ const requestReport = () => {
     form.total_load = totalLoad.value,
     form.essential_load = essentialLoad.value,
     form.generator_load = generatorLoad.value,
-    form.wire_length = wire_length.value,
+    // form.wire_length = wire_length.value,
     form.backup_hours = backup_hours.value
     
     form.rows = rows.value.map(row => ({
@@ -154,6 +159,77 @@ const requestReport = () => {
     })
 }
 
+const center = ref([33.6844, 73.0479]) // Default: Islamabad
+const zoom = ref(16)
+
+const latitude = ref(null)
+const longitude = ref(null)
+
+function getCurrentLocation() {
+
+    if (!navigator.geolocation) {
+        alert('Geolocation is not supported by your browser')
+        return
+    }
+
+    navigator.geolocation.getCurrentPosition(
+
+        (position) => {
+
+            latitude.value = position.coords.latitude
+            longitude.value = position.coords.longitude
+
+            center.value = [
+                latitude.value,
+                longitude.value
+            ]
+
+            console.log('Location:', latitude.value, longitude.value)
+        },
+
+        (error) => {
+            console.error(error)
+            alert('Please allow location access')
+        }
+
+    )
+
+}
+
+async function getCityName(lat, lng) {
+
+    const response = await fetch(
+        `/reverse-geocode?lat=${lat}&lng=${lng}`
+    )
+
+    const data = await response.json()
+
+    return {
+        city:
+            data.address.city ||
+            data.address.town ||
+            data.address.village,
+
+        state: data.address.state,
+        country: data.address.country
+    }
+
+}
+
+navigator.geolocation.getCurrentPosition(async (position) => {
+
+    const lat = position.coords.latitude
+    const lng = position.coords.longitude
+
+    const location = await getCityName(lat, lng)
+
+    form.latitude = lat
+    form.longitude = lng
+    form.city = location.city
+    form.state = location.state
+    console.log(location)
+})
+
 onMounted(() => {
     [
         { id: 1, quantity: 5, daily_runtime: 20 }, // 5 Fans
@@ -169,7 +245,9 @@ onMounted(() => {
                 quantity: item.quantity,
             })
         }
-    })
+    }),
+
+    getCurrentLocation()
 })
 </script>
 
@@ -401,41 +479,85 @@ onMounted(() => {
                                 </div>
 
                                 <div class="grid grid-cols-1 gap-3">
-                                    <div>
-                                        <label class="text-xs text-gray-500 block mb-1">Full Name</label>
+                                    <div class="flex gap-3">
+                                        <div>
+                                            <label class="text-xs text-gray-500 block mb-1">Full Name</label>
 
-                                        <input
-                                            v-model="form.name"
-                                            placeholder="Full Name"
-                                            class="w-full rounded-sm border border-green-600"
-                                        />
+                                            <input
+                                                v-model="form.name"
+                                                placeholder="Full Name"
+                                                class="w-full rounded-lg px-2 border border-green-600"
+                                            />
+                                        </div>
+                                        
+                                        <div>
+                                            <label class="text-xs text-gray-500 block mb-1">WhatsApp</label>
+                                            <input
+                                                v-model="form.whatsapp"
+                                                placeholder="WhatsApp"
+                                                class="w-full rounded-lg px-2 border border-green-600"
+                                            />
+                                        </div>
+
+                                        <div>
+                                            <label class="text-xs text-gray-500 block mb-1">Email (Optional)</label>
+                                            <input
+                                                v-model="form.email"
+                                                placeholder="Email"
+                                                class="w-full rounded-lg px-2 border border-green-600"
+                                            />
+                                        </div>
                                     </div>
-                                    
-                                    <div>
-                                        <label class="text-xs text-gray-500 block mb-1">WhatsApp</label>
-                                        <input
-                                            v-model="form.whatsapp"
-                                            placeholder="WhatsApp"
-                                            class="w-full rounded-sm border border-green-600"
-                                        />
+
+                                    <div class="flex gap-3">
+                                        <div>
+                                            <label class="text-xs text-gray-500 block mb-1">Wire Length (feet)</label>
+                                            <input
+                                                v-model="form.wire_length"
+                                                placeholder="length in feet"
+                                                class="w-full rounded-lg px-2 border border-green-600"
+                                            />
+                                        </div>
+
+                                        <div>
+                                            <label class="text-xs text-gray-500 block mb-1">Installation Area (square feet)</label>
+                                            <input
+                                                v-model="form.area"
+                                                placeholder="Area in square feet"
+                                                class="w-full rounded-lg px-2 border border-green-600"
+                                            />
+                                        </div>
+
+                                        <div>
+                                            <label class="text-xs text-gray-500 block mb-1">City</label>
+                                            <input
+                                                v-model="form.city"
+                                                placeholder="length in feet"
+                                                class="w-full rounded-lg px-2 border border-green-600"
+                                            />
+                                        </div>
                                     </div>
 
                                     <div>
-                                        <label class="text-xs text-gray-500 block mb-1">Wire Length (feet)</label>
-                                        <input
-                                            v-model="form.wire_length"
-                                            placeholder="length in feet"
-                                            class="w-full rounded-sm border border-green-600"
-                                        />
-                                    </div>
-
-                                    <div>
-                                        <label class="text-xs text-gray-500 block mb-1">Email (Optional)</label>
+                                        <label class="text-xs text-gray-500 block mb-1">Address (Optional)</label>
                                         <input
                                             v-model="form.email"
-                                            placeholder="Email"
-                                            class="w-full rounded-sm border border-green-600"
+                                            placeholder="Address"
+                                            class="w-full rounded-lg px-2 border border-green-600"
                                         />
+                                    </div>
+
+                                    <div>
+                                        <LMap
+                                            :zoom="18"
+                                            :center="center"
+                                            style="height:400px">
+
+                                            <LTileLayer
+                                                url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                                            />
+
+                                        </LMap>
                                     </div>
 
                                     <div>
@@ -683,7 +805,7 @@ onMounted(() => {
                                                     @click="unitsRows.splice(index, 1)"
                                                     class="text-red-600"
                                                 >
-                                                    <Trash2 :size="18" />
+                                                    <component :is="LucideIcons.Trash2 || LucideIcons.X" size="18" />
                                                 </button>
                                             </td>
                                         </tr>

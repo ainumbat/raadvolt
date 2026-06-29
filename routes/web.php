@@ -1,5 +1,6 @@
 <?php
 
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\DashboardController;
@@ -7,6 +8,23 @@ use App\Http\Controllers\ApplianceController;
 use App\Http\Controllers\SolarCalculationController;
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
+
+Route::get('/reverse-geocode', function () {
+
+    $lat = request('lat');
+    $lng = request('lng');
+
+    $response = Http::withHeaders([
+        'User-Agent' => 'RaadVolt/1.0'
+    ])->get('https://nominatim.openstreetmap.org/reverse', [
+        'format' => 'json',
+        'lat' => $lat,
+        'lon' => $lng,
+    ]);
+
+    return $response->json();
+
+});
 
 // Solar Report
 Route::post('/solar-calculations', [SolarCalculationController::class, 'store']);

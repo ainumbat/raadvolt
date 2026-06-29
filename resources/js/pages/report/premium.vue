@@ -197,9 +197,37 @@ const saveJson = () => {
 
                         <div class="grid md:grid-cols-2 xl:grid-cols-4 gap-5">
 
+                            <!-- Report ID -->
+                            <div class="bg-yellow-50 border border-yellow-100 rounded-2xl p-4 shadow-sm hover:shadow-lg transition">
+
+                                <div class="flex items-center gap-3 mb-2">
+
+                                    <div
+                                        class="w-10 h-10 rounded-xl bg-yellow-100 flex items-center justify-center">
+
+                                        <component
+                                            :is="LucideIcons.FileText"
+                                            size="18"
+                                            class="text-yellow-600"
+                                        />
+
+                                    </div>
+
+                                    <span class="text-gray-500 text-sm">
+                                        Report ID
+                                    </span>
+
+                                </div>
+
+                                <div class="font-bold text-lg text-gray-900">
+                                    {{ report.report_data.report_id }}
+                                </div>
+
+                            </div>
+
                             <!-- Name -->
                             <div
-                                class="bg-green-50 border border-green-100 rounded-2xl p-4">
+                                class="bg-green-50 border border-green-100 rounded-2xl p-4 shadow-sm hover:shadow-lg transition">
 
                                 <div class="flex items-center gap-3 mb-2">
 
@@ -228,7 +256,7 @@ const saveJson = () => {
 
                             <!-- WhatsApp -->
                             <div
-                                class="bg-emerald-50 border border-emerald-100 rounded-2xl p-4">
+                                class="bg-emerald-50 border border-emerald-100 rounded-2xl p-4 shadow-sm hover:shadow-lg transition">
 
                                 <div class="flex items-center gap-3 mb-2">
 
@@ -257,7 +285,7 @@ const saveJson = () => {
 
                             <!-- Email -->
                             <div
-                                class="bg-blue-50 border border-blue-100 rounded-2xl p-4">
+                                class="bg-blue-50 border border-blue-100 rounded-2xl p-4 shadow-sm hover:shadow-lg transition">
 
                                 <div class="flex items-center gap-3 mb-2">
 
@@ -280,35 +308,6 @@ const saveJson = () => {
 
                                 <div class="font-bold text-lg text-gray-900 break-all">
                                     {{ report.email }}
-                                </div>
-
-                            </div>
-
-                            <!-- Report ID -->
-                            <div
-                                class="bg-yellow-50 border border-yellow-100 rounded-2xl p-4">
-
-                                <div class="flex items-center gap-3 mb-2">
-
-                                    <div
-                                        class="w-10 h-10 rounded-xl bg-yellow-100 flex items-center justify-center">
-
-                                        <component
-                                            :is="LucideIcons.FileText"
-                                            size="18"
-                                            class="text-yellow-600"
-                                        />
-
-                                    </div>
-
-                                    <span class="text-gray-500 text-sm">
-                                        Report ID
-                                    </span>
-
-                                </div>
-
-                                <div class="font-bold text-lg text-gray-900">
-                                    {{ report.report_data.report_id }}
                                 </div>
 
                             </div>
@@ -430,7 +429,7 @@ const saveJson = () => {
                             </p>
 
                             <h3 class="text-3xl font-bold text-orange-700 mt-2">
-                                Rs {{ report.report_data.summary.estimated_monthly_bill }}
+                                Rs. {{ report.report_data.summary.estimated_monthly_bill }}
                             </h3>
 
                             <p class="text-sm text-gray-500 mt-1">
@@ -551,7 +550,7 @@ const saveJson = () => {
                                     <component
                                         :is="LucideIcons[item.icon] || LucideIcons.CircleQuestionMark"
                                         size="22"
-                                        class="text-green-600"
+                                        class="text-green-500"
                                     />
                                     {{ item.name }}
                                 </div>
@@ -565,7 +564,7 @@ const saveJson = () => {
                                 {{ item.quantity }}
                             </div>
 
-                            <div class="col-span-2 text-right font-semibold text-green-700">
+                            <div class="col-span-2 text-right font-semibold text-green-500">
                                 {{ item.watts * item.quantity }} W
                             </div>
 
@@ -607,7 +606,7 @@ const saveJson = () => {
                                     <component
                                         :is="LucideIcons[item.icon] || LucideIcons.CircleQuestionMark"
                                         size="22"
-                                        class="text-green-600"
+                                        class="text-yellow-500"
                                     />
                                     {{ item.name }}
                                 </div>
@@ -621,7 +620,7 @@ const saveJson = () => {
                                 {{ item.quantity }}
                             </div>
 
-                            <div class="col-span-2 text-right font-semibold text-yellow-700">
+                            <div class="col-span-2 text-right font-semibold text-yellow-500">
                                 {{ item.watts * item.quantity }} W
                             </div>
 
@@ -813,6 +812,48 @@ const saveJson = () => {
 
                                 </div>
 
+                            </div>
+
+                        </div>
+
+                        <!-- Items List -->
+                        <div class="bg-white border border-green-200 rounded-2xl shadow-sm overflow-hidden">
+
+                            <!-- Header -->
+                            <div class="bg-gradient-to-r from-green-600 to-green-500 text-white px-5 py-4 flex items-center justify-between">
+                                <h3 class="font-bold text-lg">
+                                    Items
+                                </h3>
+
+                                <span class="text-green-600 text-xs bg-white px-3 py-1 rounded-full">
+                                    Critical Load
+                                </span>
+                            </div>
+
+                            <!-- Table Header -->
+                            <div class="grid grid-cols-12 text-xs font-semibold text-gray-500 px-5 py-3 border-b bg-gray-50">
+                                <div class="col-span-8">Name</div>
+                                <div class="col-span-2">Quantity</div>
+                                <div class="col-span-2 text-right">Price</div>
+                            </div>
+
+                            <!-- Items -->
+                            <div class="divide-y">
+                                <div
+                                    v-for="item in report.report_data.plan_1.items_list"
+                                    class="grid grid-cols-12 px-5 py-3 hover:bg-green-50 transition">
+
+                                    <div class="col-span-8 text-gray-600">{{ item.name }}</div>
+
+                                    <div class="col-span-2 text-gray-600">
+                                        {{ item.quantity }}
+                                    </div>
+
+                                    <div class="col-span-2 text-right font-semibold text-green-500">
+                                        Rs. {{ item.price }}
+                                    </div>
+
+                                </div>
                             </div>
 
                         </div>

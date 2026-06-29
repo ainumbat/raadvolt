@@ -38,6 +38,7 @@ class SolarCalculationController extends Controller
      */
     public function store(Request $request)
     {
+        dd($request);
         $request->validate([
             'name' => 'required',
             'email' => 'nullable|email',
@@ -352,7 +353,7 @@ class SolarCalculationController extends Controller
         }
 
         $report_data = [
-            'for_gemini' => 'Calculate and update each section according to users load and ai_instruction given in each section',
+            'for_gemini' => 'Calculate and update each section according to ai_instruction given in each section and give response in same JSON format as given.',
             'report_id' => 'RV-0900' . $report->id,
 
             'summary' => [
